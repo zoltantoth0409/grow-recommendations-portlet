@@ -6,72 +6,90 @@ import GrowCard from './modules/GrowCard.es';
 
 const spritemap = Liferay.ThemeDisplay.getPathThemeImages();
 
-const GrowCardData = {
-	articleAuthor: "Gábor Ambrózy",
-	authorAvatar: "/o/GrowRecommendationsPortlet/images/0.jpeg",
-	createDate: "01.01.2019",
-	articleTitle: "Respect badge",
-	articleContent:
-		'A respect badge can be given by anyone to anyone. You can give 1 badge per month. You can use the Respect badge page to add badges. To give a respect badge, @ mention the name in the table, write your name to the From column and write the reason, why do you give it. The reason has to be for a "superpower", something why you respect the other person and something which you would like to learn from them. For Support Hungary 2016Q3 goals, you have to give min. 1 respect badge until Sept 30. If there will be need, we will add gamification to Grow later on.',
-	tags: ["badge", "gamification", "respect", "test1", "test2"],
-	readCount: "626",
-	articleCategory: "Share"
-};
+const mockupData = {
+    "data": [
+        {
+            "articleAuthor": "Gábor Ambrózy",
+            "authorAvatar": "/o/GrowRecommendationsPortlet/images/0.jpeg",
+            "createDate": "01.01.2019",
+            "articleTitle": "Respect badge",
+            "articleContent":
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+            "tags": ["badge", "gamification", "respect", "test1", "test2"],            
+            "readCount": "626",
+            "articleCategory": "Share"
+        },
+        {
+            "articleAuthor": "Gábor Ambrózy",
+            "authorAvatar": "/o/GrowRecommendationsPortlet/images/0.jpeg",
+            "createDate": "01.01.2019",
+            "articleTitle": "Respected badge",
+            "articleContent":
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+            "tags": ["badge", "gamification", "respect", "test1", "test2"],            
+            "readCount": "626",
+            "articleCategory": "Excellence"
+        },
+        {
+            "articleAuthor": "Gábor Ambrózy",
+            "authorAvatar": "/o/GrowRecommendationsPortlet/images/0.jpeg",
+            "createDate": "01.01.2019",
+            "articleTitle": "Badge of Respect",
+            "articleContent":
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+            "tags": ["badge", "gamification", "respect", "test1", "test2"],            
+            "readCount": "626",
+            "articleCategory": "People"
+        },
+        {
+            "articleAuthor": "Gábor Ambrózy",
+            "authorAvatar": "/o/GrowRecommendationsPortlet/images/0.jpeg",
+            "createDate": "01.01.2019",
+            "articleTitle": "RB",
+            "articleContent":
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+            "tags": ["badge", "gamification", "respect", "test1", "test2"],            
+            "readCount": "626",
+            "articleCategory": "Share"
+        }
+    ]
+}
 
 class App extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = 
+			{
+				data: mockupData.data,
+				spritemap: spritemap
+			};
+	  }
+
 	render() {
 		return (
 			<CarouselProvider
-				naturalSlideWidth={100}
-				naturalSlideHeight={125}
-				totalSlides={3}
+				naturalSlideWidth={30}
+				naturalSlideHeight={20}
+				totalSlides={4}
 			>
 				<Slider>
-					<Slide index={0}>
-						<div className="col-lg-4">
-							<GrowCard
-								spritemap={spritemap}
-								articleAuthor={GrowCardData.articleAuthor}
-								articleAuthorAvatar={GrowCardData.authorAvatar}
-								articleCreateDate={GrowCardData.createDate}
-								articleTitle={GrowCardData.articleTitle}
-								articleContent={GrowCardData.articleContent}
-								articleTags={GrowCardData.tags}
-								articleReadCount={GrowCardData.readCount}
-								articleCategory={GrowCardData.articleCategory}
-							/>
-						</div>
-					</Slide>
-					<Slide index={1}>
-						<div className="col-lg-4">
-							<GrowCard
-								spritemap={spritemap}
-								articleAuthor={GrowCardData.articleAuthor}
-								articleAuthorAvatar={GrowCardData.authorAvatar}
-								articleCreateDate={GrowCardData.createDate}
-								articleTitle={GrowCardData.articleTitle}
-								articleContent={GrowCardData.articleContent}
-								articleTags={GrowCardData.tags}
-								articleReadCount={GrowCardData.readCount}
-								articleCategory={"People"}
-							/>
-						</div>
-					</Slide>
-					<Slide index={2}>
-						<div className="col-lg-4">
-							<GrowCard
-								spritemap={spritemap}
-								articleAuthor={GrowCardData.articleAuthor}
-								articleAuthorAvatar={GrowCardData.authorAvatar}
-								articleCreateDate={GrowCardData.createDate}
-								articleTitle={GrowCardData.articleTitle}
-								articleContent={GrowCardData.articleContent}
-								articleTags={GrowCardData.tags}
-								articleReadCount={GrowCardData.readCount}
-								articleCategory={"Learn"}
-							/>
-						</div>
-					</Slide>
+					{this.state.data.map((growCardData, key) => 
+						<Slide index={key} key={key}>
+							<div className="col-lg-4">
+								<GrowCard
+									spritemap={this.state.spritemap}
+									articleAuthor={growCardData.articleAuthor}
+									articleAuthorAvatar={growCardData.authorAvatar}
+									articleCreateDate={growCardData.createDate}
+									articleTitle={growCardData.articleTitle}
+									articleContent={growCardData.articleContent}
+									articleTags={growCardData.tags}
+									articleReadCount={growCardData.readCount}
+									articleCategory={growCardData.articleCategory}
+								/>
+							</div>
+						</Slide>
+					)}
 				</Slider>
 				<ButtonBack>Back</ButtonBack>
 				<ButtonNext>Next</ButtonNext>
