@@ -93,7 +93,7 @@ class App extends React.Component {
 									articleAuthorAvatar={growCardData.authorAvatar}
 									articleCreateDate={growCardData.createDate}
 									articleTitle={growCardData.articleTitle}
-									articleContent={growCardData.articleContent}
+									articleContent={growCardData.articleContent.substr(0, 120) + "..."}
 									articleTags={growCardData.tags}
 									articleReadCount={growCardData.readCount}
 									articleCategory={growCardData.articleCategory}
