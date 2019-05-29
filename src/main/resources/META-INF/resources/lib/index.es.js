@@ -70,12 +70,12 @@ class App extends React.Component {
 			<CarouselProvider
 				naturalSlideWidth={30}
 				naturalSlideHeight={20}
-				totalSlides={4}
+                totalSlides={4}
+                visibleSlides={3}
 			>
 				<Slider>
 					{this.state.data.map((growCardData, key) => 
 						<Slide index={key} key={key}>
-							<div className="col-lg-4">
 								<GrowCard
 									spritemap={this.state.spritemap}
 									articleAuthor={growCardData.articleAuthor}
@@ -87,9 +87,8 @@ class App extends React.Component {
 									articleReadCount={growCardData.readCount}
 									articleCategory={growCardData.articleCategory}
 								/>
-							</div>
 						</Slide>
-					)}
+                    )}
 				</Slider>
 				<ButtonBack>Back</ButtonBack>
 				<ButtonNext>Next</ButtonNext>

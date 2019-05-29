@@ -28,7 +28,7 @@ class GrowCard extends React.Component {
   render() {
     return (
       <div
-        className={"grow-card card card-" + this.props.articleCategory.toLowerCase()}
+        className={"grow-card card card-" + this.props.articleCategory.toLowerCase() + " mr-4"}
       >
         <div className="card-body">
           <div className="autofit-row autofit-padded mb-2">
