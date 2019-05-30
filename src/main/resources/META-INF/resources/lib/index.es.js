@@ -85,6 +85,14 @@ class App extends React.Component {
                 totalSlides={5}
                 visibleSlides={3}
 			>
+                <ButtonBack
+                    className={"carousel-button-back"}>
+                    <GrowIcon
+                        spritemap={spritemap}
+                        classes="lexicon-icon inline-item"
+                        iconName="angle-left"
+                        />
+                </ButtonBack>
 				<Slider>
 					{this.state.data.map((growCardData, key) => 
 						<Slide index={key} key={key}>
@@ -102,19 +110,13 @@ class App extends React.Component {
 						</Slide>
 					)}
 				</Slider>		
-                <ButtonBack>
-                <GrowIcon
-                      spritemap={spritemap}
-                      classes="lexicon-icon inline-item"
-                      iconName="angle-left"
-                    />
-                </ButtonBack>		
-				<ButtonNext>
-                <GrowIcon
-                      spritemap={spritemap}
-                      classes="lexicon-icon inline-item"
-                      iconName="angle-right"
-                    />
+				<ButtonNext
+                    className={"carousel-button-next"}>
+                    <GrowIcon
+                        spritemap={spritemap}
+                        classes="lexicon-icon inline-item"
+                        iconName="angle-right"
+                        />
                 </ButtonNext>
 			</CarouselProvider>
 		);
