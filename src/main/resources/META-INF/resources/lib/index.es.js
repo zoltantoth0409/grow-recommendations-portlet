@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 
 import GrowCard from './modules/GrowCard.es';
+import GrowIcon from "./modules/GrowIcon.es";
 
 const spritemap = Liferay.ThemeDisplay.getPathThemeImages();
 
@@ -101,8 +102,20 @@ class App extends React.Component {
 						</Slide>
 					)}
 				</Slider>		
-                <ButtonBack>Back</ButtonBack>		
-				<ButtonNext>Next</ButtonNext>
+                <ButtonBack>
+                <GrowIcon
+                      spritemap={spritemap}
+                      classes="lexicon-icon inline-item"
+                      iconName="angle-left"
+                    />
+                </ButtonBack>		
+				<ButtonNext>
+                <GrowIcon
+                      spritemap={spritemap}
+                      classes="lexicon-icon inline-item"
+                      iconName="angle-right"
+                    />
+                </ButtonNext>
 			</CarouselProvider>
 		);
 	}
