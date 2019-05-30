@@ -81,7 +81,7 @@ class App extends React.Component {
 		return (
 			<CarouselProvider
 				naturalSlideWidth={30}
-				naturalSlideHeight={20}
+				naturalSlideHeight={30}
                 totalSlides={5}
                 visibleSlides={3}
 			>
