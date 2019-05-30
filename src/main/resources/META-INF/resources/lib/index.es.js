@@ -75,8 +75,8 @@ class App extends React.Component {
 				data: mockupData.data,
 				spritemap: spritemap
 			};
-	  }
-
+	}
+    
 	render() {
 		return (
 			<CarouselProvider
@@ -102,7 +102,7 @@ class App extends React.Component {
 									articleAuthorAvatar={growCardData.authorAvatar}
 									articleCreateDate={growCardData.createDate}
 									articleTitle={growCardData.articleTitle}
-									articleContent={growCardData.articleContent.substr(0, 120) + "..."}
+									articleContent={growCardData.articleContent.substr(0, 120)}
 									articleTags={growCardData.tags}
 									articleReadCount={growCardData.readCount}
 									articleCategory={growCardData.articleCategory}
