@@ -14,12 +14,15 @@
 .label-remaining-tags {
 	border-style: none;
 }
+
 .grow-card {
 	border-bottom: 0.6rem solid #fff;
 }
+
 .grow-card .card-body {
 	padding: 1rem 1rem 0.65rem 1rem;
 }
+
 .card-excellence:hover {
 	border-color: #fa8072;
 }
@@ -69,21 +72,22 @@
 }
 
 .grow-recommendations-carousel {
-.carousel-button-back,
-.carousel-button-next {
-	position: absolute;
-	height: 100%;	
-	z-index: 1;
-	border-color: transparent;
-    background-color: transparent;	
-}
 
-.carousel-button-back {
-    left: -1%;
-}
+	.carousel-button-back,
+	.carousel-button-next {
+		position: absolute;
+		height: 100%;
+		z-index: 1;
+		border-color: transparent;
+		background-color: transparent;
+	}
 
-.carousel-button-next {	
-	left: 98%;
-	bottom: 0%
-}
+	.carousel-button-back {
+		left: -1%;
+	}
+
+	.carousel-button-next {
+		left: 98%;
+		bottom: 0%
+	}
 }
