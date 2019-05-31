@@ -1,6 +1,7 @@
 import React from "react";
 import GrowIcon from "./GrowIcon.es";
 import GrowCardFooter from "./GrowCardFooter.es.js";
+import TextTruncate from 'react-text-truncate';
 
 class GrowCard extends React.Component {
   constructor(props) {
@@ -107,7 +108,11 @@ class GrowCard extends React.Component {
             <div className="autofit-col autofit-col-expand">
               <div className="autofit-section">
                 <div className="text-secondary">
-                  {this.props.articleContent}
+                <TextTruncate
+                    line={3}
+                    truncateText="…"
+                    text={this.props.articleContent}
+                />
                 </div>
               </div>
             </div>
