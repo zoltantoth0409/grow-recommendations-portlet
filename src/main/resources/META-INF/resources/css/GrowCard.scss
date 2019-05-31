@@ -23,14 +23,6 @@
 	padding: 1rem 1rem 0.65rem 1rem;
 }
 
-.text-clamp {
-	display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 .card-excellence:hover {
 	border-color: #fa8072;
 }
