@@ -80,6 +80,7 @@ class App extends React.Component {
 	render() {
 		return (
 			<CarouselProvider
+                className={"grow-recommendations-carousel"}
 				naturalSlideWidth={30}
 				naturalSlideHeight={30}
                 totalSlides={5}

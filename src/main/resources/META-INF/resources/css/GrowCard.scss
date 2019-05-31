@@ -68,7 +68,9 @@
 	color: #66b2ff;
 }
 
-.carousel > button {
+.grow-recommendations-carousel {
+.carousel-button-back,
+.carousel-button-next {
 	position: absolute;
 	height: 100%;	
 	z-index: 1;
@@ -83,4 +85,5 @@
 .carousel-button-next {	
 	left: 98%;
 	bottom: 0%
+}
 }
