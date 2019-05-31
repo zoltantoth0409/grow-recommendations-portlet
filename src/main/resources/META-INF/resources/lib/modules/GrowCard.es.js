@@ -106,7 +106,7 @@ class GrowCard extends React.Component {
           <div className="autofit-row autofit-padded">
             <div className="autofit-col autofit-col-expand">
               <div className="autofit-section">
-                <div className="text-secondary text-clamp">
+                <div className="text-secondary">
                   {this.props.articleContent}
                 </div>
               </div>
