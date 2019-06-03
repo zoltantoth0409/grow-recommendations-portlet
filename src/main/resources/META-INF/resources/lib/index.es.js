@@ -69,18 +69,18 @@ const mockupData = {
 }
 
 class App extends React.Component {
+	
 	constructor(props) {
         super(props);
 
         this.setVisibleSlides = this.setVisibleSlides.bind(this);
         this.onResize = this.onResize.bind(this);
 
-		this.state = 
-			{
+		this.state = {
 				data: mockupData.data,
                 spritemap: spritemap,
                 visibleSlides: null
-            };
+        };
     }
 
     setVisibleSlides(visibleSlides) {
@@ -107,25 +107,25 @@ class App extends React.Component {
 	render() {
 		return (
             <div className="container">
-            <ReactResizeDetector handleWidth onResize={this.onResize} />
-			<CarouselProvider
-                className={"grow-recommendations-carousel"}
-				naturalSlideWidth={30}
-				naturalSlideHeight={30}
-                totalSlides={5}
-                visibleSlides={this.state.visibleSlides}
-			>
-                <ButtonBack
-                    className={"carousel-button-back"}>
-                    <GrowIcon
-                        spritemap={spritemap}
-                        classes="lexicon-icon inline-item"
-                        iconName="angle-left"
-                        />
-                </ButtonBack>
-				<Slider>
-					{this.state.data.map((growCardData, key) => 
-						<Slide index={key} key={key}>
+				<ReactResizeDetector handleWidth onResize={this.onResize} />
+				<CarouselProvider
+					className={"grow-recommendations-carousel"}
+					naturalSlideWidth={30}
+					naturalSlideHeight={30}
+					totalSlides={5}
+					visibleSlides={this.state.visibleSlides}
+				>
+					<ButtonBack
+						className={"carousel-button-back"}>
+						<GrowIcon
+							spritemap={spritemap}
+							classes="lexicon-icon inline-item"
+							iconName="angle-left"
+						/>
+					</ButtonBack>
+					<Slider>
+						{this.state.data.map((growCardData, key) => 
+							<Slide index={key} key={key}>
 								<GrowCard
 									spritemap={this.state.spritemap}
 									articleAuthor={growCardData.articleAuthor}
@@ -137,18 +137,18 @@ class App extends React.Component {
 									articleReadCount={growCardData.readCount}
 									articleCategory={growCardData.articleCategory}
 								/>
-						</Slide>
-                    )}
-				</Slider>		
-				<ButtonNext
-                    className={"carousel-button-next"}>
-                    <GrowIcon
-                        spritemap={spritemap}
-                        classes="lexicon-icon inline-item"
-                        iconName="angle-right"
-                        />
-                </ButtonNext>
-			</CarouselProvider>
+							</Slide>
+						)}
+					</Slider>		
+					<ButtonNext
+						className={"carousel-button-next"}>
+						<GrowIcon
+							spritemap={spritemap}
+							classes="lexicon-icon inline-item"
+							iconName="angle-right"
+						/>
+					</ButtonNext>
+				</CarouselProvider>
             </div>
 		);
 	}
