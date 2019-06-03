@@ -93,10 +93,10 @@ class App extends React.Component {
     }
     
     onResize(width) {
-        if (width <= 780) {
+        if (width <= 640) {
             return this.setVisibleSlides(1);
         }
-        else if (width <= 1180) {
+        else if (width <= 960) {
             return this.setVisibleSlides(2);
         }
         else {
