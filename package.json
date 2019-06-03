@@ -4,6 +4,7 @@
 		"pure-react-carousel": "^1.20.0",
 		"react": "15.6.2",
 		"react-dom": "15.6.2",
+		"react-resize-detector": "^4.1.4",
 		"react-text-truncate": "^0.14.1"
 	},
 	"devDependencies": {

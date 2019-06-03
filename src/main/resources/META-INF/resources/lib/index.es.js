@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
+import ReactResizeDetector from 'react-resize-detector';
 
 import GrowCard from './modules/GrowCard.es';
 import GrowIcon from "./modules/GrowIcon.es";
@@ -73,50 +74,42 @@ class App extends React.Component {
 	constructor(props) {
         super(props);
 
-        this.handleWindowResize = this.handleWindowResize.bind(this);
         this.setVisibleSlides = this.setVisibleSlides.bind(this);
+        this.onResize = this.onResize.bind(this);
 
 		this.state = 
 			{
 				data: mockupData.data,
                 spritemap: spritemap,
-                visibleSlides: this.computeVisibleSlides()
+                visibleSlides: null,
             };
     }
 
-    componentWillUnmount() {
-        window.clearTimeout(this.throttle);
-        window.removeEventListener('resize', this.handleWindowResize, false);
-      }
-    
-      componentDidMount() {
-        window.addEventListener('resize', this.handleWindowResize, false);
-      }
-    
-      computeVisibleSlides() {
-        const width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    
-        switch (width) {
-            case width < 768:
-                return 2;
-              case width < 480:
-                return 1;
-              default:
-                return 3;
+    setVisibleSlides(visibleSlides) {
+        if (visibleSlides != this.state.visibleSlides) {
+            this.setState({
+                visibleSlides: visibleSlides,
+                loading:false,
+            });
         }
-      }
+    }
     
-      setVisibleSlides() {
-        const visibleSlides = this.setState({visibleSlides});
-      }
-    
-      handleWindowResize() {
-        window.clearTimeout(this.throttle);
-        this.throttle = window.setTimeout(this.setVisibleSlides);
-      }
-        
+    onResize(width,height) {
+        if (width <= 780) {
+            return this.setVisibleSlides(1);
+        }
+        else if (width <= 1180) {
+            return this.setVisibleSlides(2);
+        }
+        else {
+            return this.setVisibleSlides(3);
+        }
+    }
+
 	render() {
 		return (
+            <div className="container">
+            <ReactResizeDetector handleWidth handleHeight onResize={this.onResize} />
 			<CarouselProvider
                 className={"grow-recommendations-carousel"}
 				naturalSlideWidth={30}
@@ -147,7 +140,7 @@ class App extends React.Component {
 									articleCategory={growCardData.articleCategory}
 								/>
 						</Slide>
-					)}
+                    )}
 				</Slider>		
 				<ButtonNext
                     className={"carousel-button-next"}>
@@ -158,6 +151,7 @@ class App extends React.Component {
                         />
                 </ButtonNext>
 			</CarouselProvider>
+            </div>
 		);
 	}
 }
