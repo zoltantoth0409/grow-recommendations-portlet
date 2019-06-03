@@ -92,7 +92,7 @@ class App extends React.Component {
         if (visibleSlides != this.state.visibleSlides) {
             this.setState({
                 visibleSlides: visibleSlides,
-                loading:false
+                isLoading: false
             });
         }
     }
@@ -154,8 +154,8 @@ class App extends React.Component {
 					
 					<CarouselProvider
 						className={"grow-recommendations-carousel"}
-						naturalSlideWidth={375}
-						naturalSlideHeight={390}
+						naturalSlideWidth={350}
+						naturalSlideHeight={300}
 						totalSlides={this.state.totalSlides}
 						visibleSlides={this.state.visibleSlides}
 					>
