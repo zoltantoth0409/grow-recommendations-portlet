@@ -67,16 +67,54 @@ const mockupData = {
     ]
 }
 
+
+
 class App extends React.Component {
 	constructor(props) {
-		super(props);
+        super(props);
+
+        this.handleWindowResize = this.handleWindowResize.bind(this);
+        this.setVisibleSlides = this.setVisibleSlides.bind(this);
+
 		this.state = 
 			{
 				data: mockupData.data,
-				spritemap: spritemap
-			};
-	}
+                spritemap: spritemap,
+                visibleSlides: this.computeVisibleSlides()
+            };
+    }
+
+    componentWillUnmount() {
+        window.clearTimeout(this.throttle);
+        window.removeEventListener('resize', this.handleWindowResize, false);
+      }
     
+      componentDidMount() {
+        window.addEventListener('resize', this.handleWindowResize, false);
+      }
+    
+      computeVisibleSlides() {
+        const width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    
+        switch (width) {
+            case width < 768:
+                return 2;
+              case width < 480:
+                return 1;
+              default:
+                return 3;
+        }
+      }
+    
+      setVisibleSlides() {
+        const visibleSlides = this.setState({visibleSlides});
+      }
+    
+      handleWindowResize() {
+        window.clearTimeout(this.throttle);
+        this.throttle = window.setTimeout(this.setVisibleSlides);
+      }
+        
 	render() {
 		return (
 			<CarouselProvider
@@ -84,7 +122,7 @@ class App extends React.Component {
 				naturalSlideWidth={30}
 				naturalSlideHeight={30}
                 totalSlides={5}
-                visibleSlides={3}
+                visibleSlides={this.state.visibleSlides}
 			>
                 <ButtonBack
                     className={"carousel-button-back"}>
