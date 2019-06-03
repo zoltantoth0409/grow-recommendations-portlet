@@ -68,8 +68,6 @@ const mockupData = {
     ]
 }
 
-
-
 class App extends React.Component {
 	constructor(props) {
         super(props);
@@ -81,7 +79,7 @@ class App extends React.Component {
 			{
 				data: mockupData.data,
                 spritemap: spritemap,
-                visibleSlides: null,
+                visibleSlides: null
             };
     }
 
@@ -89,12 +87,12 @@ class App extends React.Component {
         if (visibleSlides != this.state.visibleSlides) {
             this.setState({
                 visibleSlides: visibleSlides,
-                loading:false,
+                loading:false
             });
         }
     }
     
-    onResize(width,height) {
+    onResize(width) {
         if (width <= 780) {
             return this.setVisibleSlides(1);
         }
@@ -109,7 +107,7 @@ class App extends React.Component {
 	render() {
 		return (
             <div className="container">
-            <ReactResizeDetector handleWidth handleHeight onResize={this.onResize} />
+            <ReactResizeDetector handleWidth onResize={this.onResize} />
 			<CarouselProvider
                 className={"grow-recommendations-carousel"}
 				naturalSlideWidth={30}
