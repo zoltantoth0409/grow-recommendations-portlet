@@ -3,18 +3,18 @@
 	.carousel-button-back,
 	.carousel-button-next {
 		position: absolute;
-		height: 100%;
 		z-index: 1;
 		border-color: transparent;
 		background-color: transparent;
 	}
 
 	.carousel-button-back {
-		left: -1%;
+		left: -4%;
+		top: 38%;
 	}
 
 	.carousel-button-next {
-		left: 98%;
-		bottom: 0%
+		right: -4%;
+		top: 38%;
 	}
 }
