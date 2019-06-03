@@ -1,12 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import ReactResizeDetector from 'react-resize-detector';
+import axios from 'axios';
+import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 
 import GrowCard from './modules/GrowCard.es';
 import GrowIcon from "./modules/GrowIcon.es";
 
-const spritemap = Liferay.ThemeDisplay.getPathThemeImages();
+const SPRITEMAP = Liferay.ThemeDisplay.getPathThemeImages();
+const API = 'https://jsonplaceholder.typicode.com';
+const DEFAULT_QUERY = '/todos/1';
 
 const mockupData = {
     "data": [
@@ -73,14 +76,16 @@ class App extends React.Component {
 	constructor(props) {
         super(props);
 
-        this.setVisibleSlides = this.setVisibleSlides.bind(this);
-        this.onResize = this.onResize.bind(this);
-
 		this.state = {
-				data: mockupData.data,
-                spritemap: spritemap,
-                visibleSlides: null
+			data: [],
+			totalSlides: 1,
+			visibleSlides: 1,
+			isLoading: false,
+			error: null
         };
+		
+		this.setVisibleSlides = this.setVisibleSlides.bind(this);
+        this.onResize = this.onResize.bind(this);
     }
 
     setVisibleSlides(visibleSlides) {
@@ -103,53 +108,93 @@ class App extends React.Component {
             return this.setVisibleSlides(3);
         }
     }
+	
+	componentDidMount() {
+		this.setState({ isLoading: true });
+
+		setTimeout(() => {
+		axios.get(API + DEFAULT_QUERY)
+			.then(
+				response => {
+					this.setState({ 
+						data: mockupData.data,
+						totalSlides: mockupData.data.length,
+						isLoading: false })
+				}
+			)
+			.catch(function(error) {
+				this.setState({ error: error, isLoading: false });
+				Liferay.Util.openToast(
+					{
+						message: error,
+						title: Liferay.Language.get('error'),
+						type: 'danger'
+					}
+				);
+			});
+			
+		}, 500);
+	}
 
 	render() {
+		
+		const {isLoading, error } = this.state;
+		
 		return (
-            <div className="container">
-				<ReactResizeDetector handleWidth onResize={this.onResize} />
-				<CarouselProvider
-					className={"grow-recommendations-carousel"}
-					naturalSlideWidth={30}
-					naturalSlideHeight={30}
-					totalSlides={5}
-					visibleSlides={this.state.visibleSlides}
-				>
-					<ButtonBack
-						className={"carousel-button-back"}>
-						<GrowIcon
-							spritemap={spritemap}
-							classes="lexicon-icon inline-item"
-							iconName="angle-left"
-						/>
-					</ButtonBack>
-					<Slider>
-						{this.state.data.map((growCardData, key) => 
-							<Slide index={key} key={key}>
-								<GrowCard
-									spritemap={this.state.spritemap}
-									articleAuthor={growCardData.articleAuthor}
-									articleAuthorAvatar={growCardData.authorAvatar}
-									articleCreateDate={growCardData.createDate}
-									articleTitle={growCardData.articleTitle}
-									articleContent={growCardData.articleContent}
-									articleTags={growCardData.tags}
-									articleReadCount={growCardData.readCount}
-									articleCategory={growCardData.articleCategory}
-								/>
-							</Slide>
-						)}
-					</Slider>		
-					<ButtonNext
-						className={"carousel-button-next"}>
-						<GrowIcon
-							spritemap={spritemap}
-							classes="lexicon-icon inline-item"
-							iconName="angle-right"
-						/>
-					</ButtonNext>
-				</CarouselProvider>
-            </div>
+			<div className="grow-recommendations-porltet">
+				<div className="container">
+				
+					{isLoading && (
+						<div className="loading-indicator">
+							<span aria-hidden="true" className="loading-animation"></span>
+						</div>
+					)}
+				
+					<ReactResizeDetector handleWidth onResize={this.onResize} />
+					
+					<CarouselProvider
+						className={"grow-recommendations-carousel"}
+						naturalSlideWidth={375}
+						naturalSlideHeight={390}
+						totalSlides={this.state.totalSlides}
+						visibleSlides={this.state.visibleSlides}
+					>
+						<ButtonBack
+							className={"carousel-button-back"}>
+							<GrowIcon
+								spritemap={SPRITEMAP}
+								classes="lexicon-icon inline-item"
+								iconName="angle-left"
+							/>
+						</ButtonBack>
+						<Slider>
+							{this.state.data.map((growCardData, key) => 
+								<Slide index={key} key={key}>
+									<GrowCard
+										spritemap={SPRITEMAP}
+										articleAuthor={growCardData.articleAuthor}
+										articleAuthorAvatar={growCardData.authorAvatar}
+										articleCreateDate={growCardData.createDate}
+										articleTitle={growCardData.articleTitle}
+										articleContent={growCardData.articleContent}
+										articleTags={growCardData.tags}
+										articleReadCount={growCardData.readCount}
+										articleCategory={growCardData.articleCategory}
+									/>
+								</Slide>
+							)}
+						</Slider>		
+						<ButtonNext
+							className={"carousel-button-next"}>
+							<GrowIcon
+								spritemap={SPRITEMAP}
+								classes="lexicon-icon inline-item"
+								iconName="angle-right"
+							/>
+						</ButtonNext>
+					</CarouselProvider>
+				</div>
+			</div>
 		);
 	}
 }
