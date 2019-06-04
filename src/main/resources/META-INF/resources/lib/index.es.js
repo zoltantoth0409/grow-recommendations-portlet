@@ -8,13 +8,14 @@ import GrowCard from './modules/GrowCard.es';
 import GrowIcon from "./modules/GrowIcon.es";
 
 const SPRITEMAP = Liferay.ThemeDisplay.getPathThemeImages();
+
 const API = 'https://jsonplaceholder.typicode.com';
 const DEFAULT_QUERY = '/todos/1';
 const REMOVE_FROM_MYFAVOURITES_QUERY = '/todos/1';
 const ADD_TO_MYFAVOURITES_QUERY = '/todos/1';
-const ADD_TO_MYFAVOURITES_EVENT_NAME = 'addGrowCardToMyFavouritesEvent';
-const REMOVE_FROM_MYFAVOURITES_EVENT_NAME = 'removeGrowCardFromMyFavouritesEvent';
-const TOGGLE_FAVOURITES_EVENT = 'toggleFavouritesEvent';
+
+const RECOMMENDATION_TOGGLE_STAR_EVENT = 'recommendationtoggleStarEvent';
+const FAVOURITES_TOGGLE_STAR_EVENT = 'favouritesToggleStarEvent';
 
 const mockupData = {
     "data": [
@@ -107,10 +108,10 @@ class App extends React.Component {
 		let instance = this; 
 		
 		Liferay.on(
-			TOGGLE_FAVOURITES_EVENT,
+			FAVOURITES_TOGGLE_STAR_EVENT,
 			function(event) {
 				if(event && event.data) {
-					instance.toggleFavourites(event.data.id);
+					instance.toggleStar(event.data);
 				}
 			}
 		);
@@ -118,11 +119,11 @@ class App extends React.Component {
 		this.setVisibleSlides = this.setVisibleSlides.bind(this);
         this.onResize = this.onResize.bind(this);
 		this.handleStarClick = this.handleStarClick.bind(this);
-		this.toggleFavourites = this.toggleFavourites.bind(this);
-		this.fireToggleFavouritesEvent = this.fireToggleFavouritesEvent.bind(this);
+		this.fireToggleStarEvent = this.fireToggleStarEvent.bind(this);
+		this.toggleStar = this.toggleStar.bind(this);
     }
 	
-	toggleFavourites(data) {
+	toggleStar(data) {
 		
 		if (data) {
 			this.setState({ isLoading: true });
@@ -142,9 +143,9 @@ class App extends React.Component {
 		}
 	}
 	
-	fireToggleFavouritesEvent(data) {
+	fireToggleStarEvent(data) {
 		Liferay.fire(
-			data.eventName,
+			RECOMMENDATION_TOGGLE_STAR_EVENT,
 			{
 				data: data
 			}
@@ -161,10 +162,8 @@ class App extends React.Component {
 				let query = null;
 				
 				if (data.star) {
-					data.eventName = ADD_TO_MYFAVOURITES_EVENT_NAME;
 					query = ADD_TO_MYFAVOURITES_QUERY;
 				} else {
-					data.eventName = REMOVE_FROM_MYFAVOURITES_EVENT_NAME;
 					query = REMOVE_FROM_MYFAVOURITES_QUERY;
 				}
 					
@@ -182,7 +181,7 @@ class App extends React.Component {
 								isLoading: false
 							});
 		
-							this.fireToggleFavouritesEvent(data);
+							this.fireToggleStarEvent(data);
 						}
 					)
 					.catch(function(error) {
