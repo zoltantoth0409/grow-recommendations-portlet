@@ -10,6 +10,11 @@ import GrowIcon from "./modules/GrowIcon.es";
 const SPRITEMAP = Liferay.ThemeDisplay.getPathThemeImages();
 const API = 'https://jsonplaceholder.typicode.com';
 const DEFAULT_QUERY = '/todos/1';
+const REMOVE_FROM_MYFAVOURITES_QUERY = '/todos/1';
+const ADD_TO_MYFAVOURITES_QUERY = '/todos/1';
+const ADD_TO_MYFAVOURITES_EVENT_NAME = 'addGrowCardToMyFavouritesEvent';
+const REMOVE_FROM_MYFAVOURITES_EVENT_NAME = 'removeGrowCardFromMyFavouritesEvent';
+const TOGGLE_FAVOURITES_EVENT = 'toggleFavouritesEvent';
 
 const mockupData = {
     "data": [
@@ -17,12 +22,15 @@ const mockupData = {
             "articleAuthor": "Gábor Ambrózy",
             "authorAvatar": "/o/GrowRecommendationsPortlet/images/0.jpeg",
             "createDate": "01.01.2019",
-            "articleTitle": "Respect badge",
+            "articleTitle": "Title 01 My Faavourite",
             "articleContent":
                 "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
             "tags": ["badge", "gamification", "respect", "test1", "test2"],            
             "readCount": "626",
-            "articleCategory": "Share"
+            "articleCategory": "Share",
+			id: "card-001",
+			star: true,
+			like: true
         },
         {
             "articleAuthor": "Gábor Ambrózy",
@@ -33,7 +41,10 @@ const mockupData = {
                 "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
             "tags": ["badge", "gamification", "respect", "test1", "test2"],            
             "readCount": "626",
-            "articleCategory": "Excellence"
+            "articleCategory": "Excellence",
+			id: "card-9999",
+			star: false,
+			like: false
         },
         {
             "articleAuthor": "Gábor Ambrózy",
@@ -44,7 +55,10 @@ const mockupData = {
                 "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
             "tags": ["badge", "gamification", "respect", "test1", "test2"],            
             "readCount": "626",
-            "articleCategory": "People"
+            "articleCategory": "People",
+			id: "card-103",
+			star: false,
+			like: false
         },
         {
             "articleAuthor": "Gábor Ambrózy",
@@ -55,7 +69,10 @@ const mockupData = {
                 "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
             "tags": ["badge", "gamification", "respect", "test1", "test2"],            
             "readCount": "626",
-            "articleCategory": "Share"
+            "articleCategory": "Share",
+			id: "card-104",
+			star: false,
+			like: false
         },
         {
             "articleAuthor": "Gábor Ambrózy",
@@ -66,7 +83,10 @@ const mockupData = {
                 "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
             "tags": ["badge", "gamification", "respect", "test1", "test2"],            
             "readCount": "626",
-            "articleCategory": "Share"
+            "articleCategory": "Share",
+			id: "card-105",
+			star: false,
+			like: false
         }
     ]
 }
@@ -84,9 +104,103 @@ class App extends React.Component {
 			error: null
         };
 		
+		let instance = this; 
+		
+		Liferay.on(
+			TOGGLE_FAVOURITES_EVENT,
+			function(event) {
+				if(event && event.data) {
+					instance.toggleFavourites(event.data.id);
+				}
+			}
+		);
+		
 		this.setVisibleSlides = this.setVisibleSlides.bind(this);
         this.onResize = this.onResize.bind(this);
+		this.handleStarClick = this.handleStarClick.bind(this);
+		this.toggleFavourites = this.toggleFavourites.bind(this);
+		this.fireToggleFavouritesEvent = this.fireToggleFavouritesEvent.bind(this);
     }
+	
+	toggleFavourites(data) {
+		
+		if (data) {
+			this.setState({ isLoading: true });
+		
+			setTimeout(() => {
+					const newData = this.state.data.map(card =>
+						card.id === data.id
+						? Object.assign(card, {star: data.star})
+						: card
+					);
+					
+					this.setState({
+						data: newData,
+						isLoading: false
+					});
+			}, 500);
+		}
+	}
+	
+	fireToggleFavouritesEvent(data) {
+		Liferay.fire(
+			data.eventName,
+			{
+				data: data
+			}
+		);
+	}
+	
+	handleStarClick(data) {
+			
+		if (data) {
+			this.setState({ isLoading: true });
+			
+			setTimeout(() => {	
+				
+				let query = null;
+				
+				if (data.star) {
+					data.eventName = ADD_TO_MYFAVOURITES_EVENT_NAME;
+					query = ADD_TO_MYFAVOURITES_QUERY;
+				} else {
+					data.eventName = REMOVE_FROM_MYFAVOURITES_EVENT_NAME;
+					query = REMOVE_FROM_MYFAVOURITES_QUERY;
+				}
+					
+				axios.get(API + query)
+					.then(
+						response => {
+							const newData = this.state.data.map(card =>
+								card.id === data.id
+								? Object.assign(card, {star: data.star})
+								: card
+							);
+														
+							this.setState({
+								data: newData,
+								isLoading: false
+							});
+		
+							this.fireToggleFavouritesEvent(data);
+						}
+					)
+					.catch(function(error) {
+						this.setState({ error: error, isLoading: false });
+						Liferay.Util.openToast(
+							{
+								message: error,
+								title: Liferay.Language.get('error'),
+								type: 'danger'
+							}
+						);
+					});
+				
+			}, 500);
+			
+		}
+		
+	}
 
     setVisibleSlides(visibleSlides) {
         if (visibleSlides != this.state.visibleSlides) {
@@ -168,18 +282,23 @@ class App extends React.Component {
 							/>
 						</ButtonBack>
 						<Slider>
-							{this.state.data.map((growCardData, key) => 
+							{this.state.data.map((cardData, key) => 
 								<Slide index={key} key={key}>
 									<GrowCard
 										spritemap={SPRITEMAP}
-										articleAuthor={growCardData.articleAuthor}
-										articleAuthorAvatar={growCardData.authorAvatar}
-										articleCreateDate={growCardData.createDate}
-										articleTitle={growCardData.articleTitle}
-										articleContent={growCardData.articleContent}
-										articleTags={growCardData.tags}
-										articleReadCount={growCardData.readCount}
-										articleCategory={growCardData.articleCategory}
+										cardData={cardData}
+										handleStarClick={this.handleStarClick}
+										articleAuthor={cardData.articleAuthor}
+										articleAuthorAvatar={cardData.authorAvatar}
+										articleCreateDate={cardData.createDate}
+										articleTitle={cardData.articleTitle}
+										articleContent={cardData.articleContent}
+										articleTags={cardData.tags}
+										articleReadCount={cardData.readCount}
+										articleCategory={cardData.articleCategory}
+										like={cardData.like}
+										star={cardData.star}
+										id={cardData.id}
 									/>
 								</Slide>
 							)}
