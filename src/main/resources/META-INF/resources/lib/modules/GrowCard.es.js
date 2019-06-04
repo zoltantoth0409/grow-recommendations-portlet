@@ -7,23 +7,19 @@ class GrowCard extends React.Component {
 	
 	constructor(props) {
 		super(props);
-		
-		this.state = {
-			star: false,
-			like: false
-		};
 
-		this.toggleStarContent = this.toggleStarContent.bind(this);
-		this.toggleLikeContent = this.toggleLikeContent.bind(this);
+		this._handleLikeClicked = this._handleLikeClicked.bind(this);
+		this._handleStarClick = this._handleStarClick.bind(this);
 	}
 
-	toggleStarContent() {
-		this.setState(state => ({
-		  star: !state.star
-		}));
+	_handleStarClick() {
+
+		this.props.cardData.star = !this.props.cardData.star;
+			
+		this.props.handleStarClick(this.props.cardData);
 	}
 
-	toggleLikeContent() {
+	_handleLikeClicked() {
 		this.setState(state => ({
 		  like: !state.like
 		}));
@@ -57,16 +53,16 @@ class GrowCard extends React.Component {
 							<button
 							  className="btn btn-outline-secondary btn-outline-borderless"
 							  type="button"
-							  onClick={this.toggleStarContent}
+							  onClick={this._handleStarClick}
 							>
-							  {this.state.star && (
+							  {this.props.star && (
 								<GrowIcon
 								  spritemap={this.props.spritemap}
 								  classes="lexicon-icon inline-item"
 								  iconName="star"
 								/>
 							  )}
-							  {this.state.star == false && (
+							  {this.props.star == false && (
 								<GrowIcon
 								  spritemap={this.props.spritemap}
 								  classes="lexicon-icon inline-item"
@@ -78,16 +74,16 @@ class GrowCard extends React.Component {
 							<button
 							  className="btn btn-outline-secondary btn-outline-borderless"
 							  type="button"
-							  onClick={this.toggleLikeContent}
+							  onClick={this._handleLikeClicked}
 							>
-							  {this.state.like && (
+							  {this.props.like && (
 								<GrowIcon
 								  spritemap={this.props.spritemap}
 								  classes="lexicon-icon thumbs-up-liked"
 								  iconName="thumbs-up"
 								/>
 							  )}
-							  {this.state.like == false && (
+							  {this.props.like == false && (
 								<GrowIcon
 								  spritemap={this.props.spritemap}
 								  classes="lexicon-icon"
