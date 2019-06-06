@@ -1,0 +1,20 @@
+.grow-recommendations-carousel {
+
+	.carousel-button-back,
+	.carousel-button-next {
+		position: absolute;
+		z-index: 1;
+		border-color: transparent;
+		background-color: transparent;
+	}
+
+	.carousel-button-back {
+		left: -4%;
+		top: 38%;
+	}
+
+	.carousel-button-next {
+		right: -4%;
+		top: 38%;
+	}
+}
