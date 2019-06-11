@@ -128,18 +128,16 @@ class App extends React.Component {
 		if (data) {
 			this.setState({ isLoading: true });
 		
-			setTimeout(() => {
-					const newData = this.state.data.map(card =>
-						card.id === data.id
-						? Object.assign(card, {star: data.star})
-						: card
-					);
-					
-					this.setState({
-						data: newData,
-						isLoading: false
-					});
-			}, 500);
+			const newData = this.state.data.map(card =>
+				card.id === data.id
+				? Object.assign(card, {star: data.star})
+				: card
+			);
+			
+			this.setState({
+				data: newData,
+				isLoading: false
+			});
 		}
 	}
 	
@@ -156,46 +154,42 @@ class App extends React.Component {
 			
 		if (data) {
 			this.setState({ isLoading: true });
+				
+			let query = null;
 			
-			setTimeout(() => {	
+			if (data.star) {
+				query = ADD_TO_MYFAVOURITES_QUERY;
+			} else {
+				query = REMOVE_FROM_MYFAVOURITES_QUERY;
+			}
 				
-				let query = null;
-				
-				if (data.star) {
-					query = ADD_TO_MYFAVOURITES_QUERY;
-				} else {
-					query = REMOVE_FROM_MYFAVOURITES_QUERY;
-				}
-					
-				axios.get(API + query)
-					.then(
-						response => {
-							const newData = this.state.data.map(card =>
-								card.id === data.id
-								? Object.assign(card, {star: data.star})
-								: card
-							);
-														
-							this.setState({
-								data: newData,
-								isLoading: false
-							});
-		
-							this.fireToggleStarEvent(data);
-						}
-					)
-					.catch(function(error) {
-						this.setState({ error: error, isLoading: false });
-						Liferay.Util.openToast(
-							{
-								message: error,
-								title: Liferay.Language.get('error'),
-								type: 'danger'
-							}
+			axios.get(API + query)
+				.then(
+					response => {
+						const newData = this.state.data.map(card =>
+							card.id === data.id
+							? Object.assign(card, {star: data.star})
+							: card
 						);
-					});
-				
-			}, 500);
+													
+						this.setState({
+							data: newData,
+							isLoading: false
+						});
+	
+						this.fireToggleStarEvent(data);
+					}
+				)
+				.catch(function(error) {
+					this.setState({ error: error, isLoading: false });
+					Liferay.Util.openToast(
+						{
+							message: error,
+							title: Liferay.Language.get('error'),
+							type: 'danger'
+						}
+					);
+				});
 			
 		}
 		
@@ -211,7 +205,7 @@ class App extends React.Component {
     }
     
     onResize(width) {
-        if (width <= 640) {
+        if (width <= 680) {
             return this.setVisibleSlides(1);
         }
         else if (width <= 960) {
@@ -225,28 +219,25 @@ class App extends React.Component {
 	componentDidMount() {
 		this.setState({ isLoading: true });
 
-		setTimeout(() => {
 		axios.get(API + DEFAULT_QUERY)
-			.then(
-				response => {
-					this.setState({ 
-						data: mockupData.data,
-						totalSlides: mockupData.data.length,
-						isLoading: false })
+		.then(
+			response => {
+				this.setState({ 
+					data: mockupData.data,
+					totalSlides: mockupData.data.length,
+					isLoading: false })
+			}
+		)
+		.catch(function(error) {
+			this.setState({ error: error, isLoading: false });
+			Liferay.Util.openToast(
+				{
+					message: error,
+					title: Liferay.Language.get('error'),
+					type: 'danger'
 				}
-			)
-			.catch(function(error) {
-				this.setState({ error: error, isLoading: false });
-				Liferay.Util.openToast(
-					{
-						message: error,
-						title: Liferay.Language.get('error'),
-						type: 'danger'
-					}
-				);
-			});
-			
-		}, 500);
+			);
+		});
 	}
 
 	render() {
