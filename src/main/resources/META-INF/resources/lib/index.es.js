@@ -254,7 +254,7 @@ class App extends React.Component {
 		const {isLoading, error } = this.state;
 		
 		return (
-			<div className="grow-recommendations-porltet">
+			<div className="grow-recommendations-portlet">
 				<div className="container">
 				
 					{isLoading && (
@@ -280,7 +280,7 @@ class App extends React.Component {
 								iconName="angle-left"
 							/>
 						</ButtonBack>
-						<Slider>
+						<Slider className={"grow-carousel-slider"}>
 							{this.state.data.map((cardData, key) => 
 								<Slide index={key} key={key}>
 									<GrowCard
