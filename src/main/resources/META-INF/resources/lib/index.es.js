@@ -7,95 +7,28 @@ import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-re
 import GrowCard from './modules/GrowCard.es';
 import GrowIcon from "./modules/GrowIcon.es";
 
-const SPRITEMAP = Liferay.ThemeDisplay.getPathThemeImages();
-
-const API = 'https://jsonplaceholder.typicode.com';
-const DEFAULT_QUERY = '/todos/1';
-const REMOVE_FROM_MYFAVOURITES_QUERY = '/todos/1';
-const ADD_TO_MYFAVOURITES_QUERY = '/todos/1';
-
-const RECOMMENDATION_TOGGLE_STAR_EVENT = 'recommendationtoggleStarEvent';
-const FAVOURITES_TOGGLE_STAR_EVENT = 'favouritesToggleStarEvent';
-
-const mockupData = {
-    "data": [
-        {
-            "articleAuthor": "Gábor Ambrózy",
-            "authorAvatar": "/o/GrowRecommendationsPortlet/images/0.jpeg",
-            "createDate": "01.01.2019",
-            "articleTitle": "Title 01 My Faavourite",
-            "articleContent":
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-            "tags": ["badge", "gamification", "respect", "test1", "test2"],            
-            "readCount": "626",
-            "articleCategory": "Share",
-			id: "card-001",
-			star: true,
-			like: true
-        },
-        {
-            "articleAuthor": "Gábor Ambrózy",
-            "authorAvatar": "/o/GrowRecommendationsPortlet/images/0.jpeg",
-            "createDate": "01.01.2019",
-            "articleTitle": "Respected badge",
-            "articleContent":
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-            "tags": ["badge", "gamification", "respect", "test1", "test2"],            
-            "readCount": "626",
-            "articleCategory": "Excellence",
-			id: "card-9999",
-			star: false,
-			like: false
-        },
-        {
-            "articleAuthor": "Gábor Ambrózy",
-            "authorAvatar": "/o/GrowRecommendationsPortlet/images/0.jpeg",
-            "createDate": "01.01.2019",
-            "articleTitle": "Badge of Respect",
-            "articleContent":
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-            "tags": ["badge", "gamification", "respect", "test1", "test2"],            
-            "readCount": "626",
-            "articleCategory": "People",
-			id: "card-103",
-			star: false,
-			like: false
-        },
-        {
-            "articleAuthor": "Gábor Ambrózy",
-            "authorAvatar": "/o/GrowRecommendationsPortlet/images/0.jpeg",
-            "createDate": "01.01.2019",
-            "articleTitle": "RB",
-            "articleContent":
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-            "tags": ["badge", "gamification", "respect", "test1", "test2"],            
-            "readCount": "626",
-            "articleCategory": "Share",
-			id: "card-104",
-			star: false,
-			like: false
-        },
-        {
-            "articleAuthor": "Gábor Ambrózy",
-            "authorAvatar": "/o/GrowRecommendationsPortlet/images/0.jpeg",
-            "createDate": "01.01.2019",
-            "articleTitle": "RB-5",
-            "articleContent":
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-            "tags": ["badge", "gamification", "respect", "test1", "test2"],            
-            "readCount": "626",
-            "articleCategory": "Share",
-			id: "card-105",
-			star: false,
-			like: false
-        }
-    ]
-}
-
 class App extends React.Component {
 	
 	constructor(props) {
         super(props);
+
+		const GROUP_ID = Liferay.ThemeDisplay.getCompanyGroupId();
+		const USER_ID = Liferay.ThemeDisplay.getUserId();
+		this.PORTAL_URL = Liferay.ThemeDisplay.getPortalURL();
+
+		this.SPRITEMAP = Liferay.ThemeDisplay.getPathThemeImages();
+
+		this.ADD_TO_MYFAVOURITES_QUERY = this.PORTAL_URL + "/o/favourites/" + "/addFavourite?groupId=" + GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
+		this.REMOVE_FROM_MYFAVOURITES_QUERY = this.PORTAL_URL + "/o/favourites/" + "/removeFavourite?groupId=" + GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
+		this.GET_ISFAVOURITE_ARRAY = this.PORTAL_URL + "/o/favourites/isFavouriteArray?groupId="+ GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
+
+		this.GET_ISLIKED_ARRAY = this.PORTAL_URL + "/o/grow-likes/isAssetsLiked?userId=" + USER_ID + "&assetEntryId=";
+		this.GET_ASSETS_LIKED_BY_USER = this.PORTAL_URL + "/o/grow-likes/getAssetsLikedByUserId?userId=" + USER_ID;
+
+		this.GET_RECOMMENDATIONS_DEFAULT = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US";
+		this.GET_RECOMMENDATIONS_BY_LIKED = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US?includeAssetTags=true&includeAssetCategories=true&includeUserPortrait=true&assetEntryId=";
+		this.RECOMMENDATION_TOGGLE_STAR_EVENT = 'recommendationtoggleStarEvent';
+		this.FAVOURITES_TOGGLE_STAR_EVENT = 'favouritesToggleStarEvent';
 
 		this.state = {
 			data: [],
@@ -104,23 +37,23 @@ class App extends React.Component {
 			isLoading: false,
 			error: null
         };
-		
+
+		this.setVisibleSlides = this.setVisibleSlides.bind(this);
+        this.onResize = this.onResize.bind(this);
+		this.handleStarClick = this.handleStarClick.bind(this);
+		this.fireToggleStarEvent = this.fireToggleStarEvent.bind(this);
+		this.toggleStar = this.toggleStar.bind(this);
+
 		let instance = this; 
 		
 		Liferay.on(
-			FAVOURITES_TOGGLE_STAR_EVENT,
+			this.FAVOURITES_TOGGLE_STAR_EVENT,
 			function(event) {
 				if(event && event.data) {
 					instance.toggleStar(event.data);
 				}
 			}
 		);
-		
-		this.setVisibleSlides = this.setVisibleSlides.bind(this);
-        this.onResize = this.onResize.bind(this);
-		this.handleStarClick = this.handleStarClick.bind(this);
-		this.fireToggleStarEvent = this.fireToggleStarEvent.bind(this);
-		this.toggleStar = this.toggleStar.bind(this);
     }
 	
 	toggleStar(data) {
@@ -143,7 +76,7 @@ class App extends React.Component {
 	
 	fireToggleStarEvent(data) {
 		Liferay.fire(
-			RECOMMENDATION_TOGGLE_STAR_EVENT,
+			this.RECOMMENDATION_TOGGLE_STAR_EVENT,
 			{
 				data: data
 			}
@@ -158,39 +91,67 @@ class App extends React.Component {
 			let query = null;
 			
 			if (data.star) {
-				query = ADD_TO_MYFAVOURITES_QUERY;
-			} else {
-				query = REMOVE_FROM_MYFAVOURITES_QUERY;
-			}
+				query = this.ADD_TO_MYFAVOURITES_QUERY + data.id;
 				
-			axios.get(API + query)
-				.then(
-					response => {
-						const newData = this.state.data.map(card =>
-							card.id === data.id
-							? Object.assign(card, {star: data.star})
-							: card
-						);
-													
-						this.setState({
-							data: newData,
-							isLoading: false
-						});
-	
-						this.fireToggleStarEvent(data);
-					}
-				)
-				.catch(function(error) {
-					this.setState({ error: error, isLoading: false });
-					Liferay.Util.openToast(
-						{
-							message: error,
-							title: Liferay.Language.get('error'),
-							type: 'danger'
+				axios.put(query)
+					.then(
+						response => {
+							const newData = this.state.data.map(card =>
+								card.id === data.id
+								? Object.assign(card, {star: data.star})
+								: card
+							);
+														
+							this.setState({
+								data: newData,
+								isLoading: false
+							});
+		
+							this.fireToggleStarEvent(data);
 						}
-					);
-				});
-			
+					)
+					.catch(error => {
+						this.setState({ error: error, isLoading: false });
+						Liferay.Util.openToast(
+							{
+								message: error,
+								title: Liferay.Language.get('error'),
+								type: 'danger'
+							}
+						);
+					});
+				}
+				else {
+					query = this.REMOVE_FROM_MYFAVOURITES_QUERY + data.id;
+
+					axios.delete(query)
+					.then(
+						response => {
+							const newData = this.state.data.map(card =>
+								card.id === data.id
+								? Object.assign(card, {star: data.star})
+								: card
+							);
+														
+							this.setState({
+								data: newData,
+								isLoading: false
+							});
+		
+							this.fireToggleStarEvent(data);
+						}
+					)
+					.catch(error => {
+						this.setState({ error: error, isLoading: false });
+						Liferay.Util.openToast(
+							{
+								message: error,
+								title: Liferay.Language.get('error'),
+								type: 'danger'
+							}
+						);
+					});
+				}
 		}
 		
 	}
@@ -219,16 +180,93 @@ class App extends React.Component {
 	componentDidMount() {
 		this.setState({ isLoading: true });
 
-		axios.get(API + DEFAULT_QUERY)
-		.then(
-			response => {
+		axios.get(this.GET_ASSETS_LIKED_BY_USER)
+		.then(response => {
+			let assetEntryIdArr = [];
+			response.data.data.map(asset => {
+				assetEntryIdArr.push(asset.id);
+			})
+
+			const assetEntryIdStr = assetEntryIdArr.join('&assetEntryId=');
+
+			axios.get(this.GET_RECOMMENDATIONS_BY_LIKED + assetEntryIdStr)
+			.then(response => {
 				this.setState({ 
-					data: mockupData.data,
-					totalSlides: mockupData.data.length,
-					isLoading: false })
-			}
-		)
-		.catch(function(error) {
+					data: response.data,
+					totalSlides: response.data.length
+				})
+
+				let assetEntryIdArr = [];
+				response.data.map(asset => {
+					assetEntryIdArr.push(asset.id);
+				})
+
+				const assetEntryIdStr = assetEntryIdArr.join('&assetEntryId=');
+
+				axios.get(this.GET_ISFAVOURITE_ARRAY + assetEntryIdStr)
+				.then(response => {
+					let newData = [];
+					for(var i = 0; i < response.data.length; i++) {
+						newData.push(Object.assign({star: response.data[i]}, this.state.data[i]));
+					}
+
+					this.setState({
+						data: newData
+					})
+
+					let assetEntryIdArr = [];
+					this.sate.data.map(asset => {
+						assetEntryIdArr.push(asset.id);
+					})
+
+					const assetEntryIdStr = assetEntryIdArr.join('&assetEntryId=');
+
+					axios.get(this.GET_ISLIKED_ARRAY + assetEntryIdStr)
+					.then(response => {
+						let newData = [];
+						for(var i = 0; i < response.data.length; i++) {
+							newData.push(Object.assign({like: response.data[i]}, this.state.data[i]));
+						}
+
+						this.setState({
+							data: newData,
+							isLoading: false
+						})
+					})
+					.catch(error => {
+						this.setState({ error: error, isLoading: false });
+						Liferay.Util.openToast(
+							{
+								message: error,
+								title: Liferay.Language.get('error'),
+								type: 'danger'
+							}
+						);
+					})
+				})
+				.catch(error => {
+					this.setState({ error: error, isLoading: false });
+					Liferay.Util.openToast(
+						{
+							message: error,
+							title: Liferay.Language.get('error'),
+							type: 'danger'
+						}
+					);
+				})
+			})
+			.catch(error => {
+				this.setState({ error: error, isLoading: false });
+				Liferay.Util.openToast(
+					{
+						message: error,
+						title: Liferay.Language.get('error'),
+						type: 'danger'
+					}
+				);
+			})
+		})
+		.catch(error => {
 			this.setState({ error: error, isLoading: false });
 			Liferay.Util.openToast(
 				{
@@ -243,7 +281,6 @@ class App extends React.Component {
 	render() {
 		
 		const {isLoading, error } = this.state;
-		
 		return (
 			<div className="grow-recommendations-portlet">
 				<div className="container">
@@ -266,7 +303,7 @@ class App extends React.Component {
 						<ButtonBack
 							className={"carousel-button-back"}>
 							<GrowIcon
-								spritemap={SPRITEMAP}
+								spritemap={this.SPRITEMAP}
 								classes="lexicon-icon inline-item"
 								iconName="angle-left"
 							/>
@@ -275,7 +312,8 @@ class App extends React.Component {
 							{this.state.data.map((cardData, key) => 
 								<Slide index={key} key={key}>
 									<GrowCard
-										spritemap={SPRITEMAP}
+										spritemap={this.SPRITEMAP}
+										portalUrl={this.PORTAL_URL}
 										cardData={cardData}
 										handleStarClick={this.handleStarClick}
 										articleAuthor={cardData.articleAuthor}
@@ -286,8 +324,8 @@ class App extends React.Component {
 										articleTags={cardData.tags}
 										articleReadCount={cardData.readCount}
 										articleCategory={cardData.articleCategory}
-										like={cardData.like}
-										star={cardData.star}
+										like={cardData.like ? cardData.like : false}
+										star={cardData.star ? cardData.star : false}
 										id={cardData.id}
 									/>
 								</Slide>
@@ -296,7 +334,7 @@ class App extends React.Component {
 						<ButtonNext
 							className={"carousel-button-next"}>
 							<GrowIcon
-								spritemap={SPRITEMAP}
+								spritemap={this.SPRITEMAP}
 								classes="lexicon-icon inline-item"
 								iconName="angle-right"
 							/>

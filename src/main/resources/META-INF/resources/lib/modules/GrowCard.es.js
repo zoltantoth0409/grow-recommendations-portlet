@@ -98,7 +98,8 @@ class GrowCard extends React.Component {
 					<div className="autofit-row autofit-padded">
 						<div className="autofit-col autofit-col-expand">
 							<div className="autofit-section">
-								<h3>{this.props.articleTitle}</h3>
+							https://grow.liferay.com/share/before+you+create+an+lpp+patch+ticket
+								<a href={this.props.portalUrl + "/" + this.props.articleCategory + "/" +this.props.articleTitle.split(' ').join('+').toLowerCase()}><h3>{this.props.articleTitle}</h3></a>
 							</div>
 						</div>
 					</div>
