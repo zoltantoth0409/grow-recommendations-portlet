@@ -26,7 +26,7 @@ class App extends React.Component {
 		this.GET_ASSETS_LIKED_BY_USER = this.PORTAL_URL + "/o/grow-likes/getAssetsLikedByUserId?userId=" + USER_ID;
 
 		this.GET_RECOMMENDATIONS_DEFAULT = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US";
-		this.GET_RECOMMENDATIONS_BY_LIKED = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US?includeAssetTags=true&includeAssetCategories=true&includeUserPortrait=true&assetEntryId=";
+		this.GET_RECOMMENDATIONS_BY_LIKED = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US?count=15&includeAssetTags=true&includeAssetCategories=true&includeUserPortrait=true&assetEntryId=";
 		this.RECOMMENDATION_TOGGLE_STAR_EVENT = 'recommendationtoggleStarEvent';
 		this.FAVOURITES_TOGGLE_STAR_EVENT = 'favouritesToggleStarEvent';
 
@@ -182,14 +182,19 @@ class App extends React.Component {
 
 		axios.get(this.GET_ASSETS_LIKED_BY_USER)
 		.then(response => {
-			let assetEntryIdArr = [];
-			response.data.data.map(asset => {
-				assetEntryIdArr.push(asset.id);
-			})
+			let api = this.GET_RECOMMENDATIONS_DEFAULT;
+			if (response.data.data.length > 0) {
+				let assetEntryIdArr = [];
 
-			const assetEntryIdStr = assetEntryIdArr.join('&assetEntryId=');
+				response.data.data.map(asset => {
+					assetEntryIdArr.push(asset.id);
+				})
 
-			axios.get(this.GET_RECOMMENDATIONS_BY_LIKED + assetEntryIdStr)
+				const assetEntryIdStr = assetEntryIdArr.join('&assetEntryId=');
+
+				api = this.GET_RECOMMENDATIONS_BY_LIKED + assetEntryIdStr;
+			}
+			axios.get(api)
 			.then(response => {
 				this.setState({ 
 					data: response.data,
