@@ -20,9 +20,9 @@ class GrowCard extends React.Component {
 	}
 
 	_handleLikeClicked() {
-		this.setState(state => ({
-		  like: !state.like
-		}));
+		this.props.cardData.like = !this.props.cardData.like;
+
+		this.props.handleLikeClick(this.props.cardData);
 	}
 
 	render() {
@@ -79,14 +79,14 @@ class GrowCard extends React.Component {
 							  {this.props.like && (
 								<GrowIcon
 								  spritemap={this.props.spritemap}
-								  classes="lexicon-icon thumbs-up-liked"
+								  classes="lexicon-icon thumbs-up"
 								  iconName="thumbs-up"
 								/>
 							  )}
 							  {this.props.like == false && (
 								<GrowIcon
 								  spritemap={this.props.spritemap}
-								  classes="lexicon-icon"
+								  classes="lexicon-icon thumbs-up-liked"
 								  iconName="thumbs-up"
 								/>
 							  )}
@@ -97,9 +97,12 @@ class GrowCard extends React.Component {
 
 					<div className="autofit-row autofit-padded">
 						<div className="autofit-col autofit-col-expand">
-							<div className="autofit-section">
-							https://grow.liferay.com/share/before+you+create+an+lpp+patch+ticket
-								<a href={this.props.portalUrl + "/" + this.props.articleCategory + "/" +this.props.articleTitle.split(' ').join('+').toLowerCase()}><h3>{this.props.articleTitle}</h3></a>
+							<div className="autofit-section grow-card-title">
+								<a href={this.props.portalUrl + "/" + this.props.articleCategory + "/" +this.props.articleTitle.split(' ').join('+').toLowerCase()}><h3><TextTruncate
+										line={2}
+										truncateText="…"
+										text={this.props.articleTitle}
+									/></h3></a>
 							</div>
 						</div>
 					</div>
@@ -107,7 +110,7 @@ class GrowCard extends React.Component {
 					<div className="autofit-row autofit-padded">
 						<div className="autofit-col autofit-col-expand">
 							<div className="autofit-section">
-								<div className="text-secondary article-content">
+								<div className="text-secondary grow-card-cont">
 									<TextTruncate
 										line={3}
 										truncateText="…"

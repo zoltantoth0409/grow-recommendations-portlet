@@ -22,6 +22,8 @@ class App extends React.Component {
 		this.REMOVE_FROM_MYFAVOURITES_QUERY = this.PORTAL_URL + "/o/favourites/" + "/removeFavourite?groupId=" + GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
 		this.GET_ISFAVOURITE_ARRAY = this.PORTAL_URL + "/o/favourites/isFavouriteArray?groupId="+ GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
 
+		this.ADD_ASSET_LIKE = this.PORTAL_URL + "/o/grow-likes/addAssetLike?userId=" + USER_ID + "&rank=1&assetEntryId=";
+		this.REMOVE_ASSET_LIKE = this.PORTAL_URL + "/o/grow-likes/deleteAssetLike?userId=" + USER_ID + "&assetEntryId=";
 		this.GET_ISLIKED_ARRAY = this.PORTAL_URL + "/o/grow-likes/isAssetsLiked?userId=" + USER_ID + "&assetEntryId=";
 		this.GET_ASSETS_LIKED_BY_USER = this.PORTAL_URL + "/o/grow-likes/getAssetsLikedByUserId?userId=" + USER_ID;
 
@@ -41,6 +43,7 @@ class App extends React.Component {
 		this.setVisibleSlides = this.setVisibleSlides.bind(this);
         this.onResize = this.onResize.bind(this);
 		this.handleStarClick = this.handleStarClick.bind(this);
+		this.handleLikeClick = this.handleLikeClick.bind(this);
 		this.fireToggleStarEvent = this.fireToggleStarEvent.bind(this);
 		this.toggleStar = this.toggleStar.bind(this);
 
@@ -156,6 +159,74 @@ class App extends React.Component {
 		
 	}
 
+	handleLikeClick(data) {
+		if (data) {
+			this.setState({ isLoading: true });
+				
+			let query = null;
+			
+			if (data.like) {
+				query = this.ADD_ASSET_LIKE + data.id;
+				
+				axios.put(query)
+					.then(
+						response => {
+							const newData = this.state.data.map(card =>
+								card.id === data.id
+								? Object.assign(card, {like: data.like})
+								: card
+							);
+														
+							this.setState({
+								data: newData,
+								isLoading: false
+							});
+						}
+					)
+					.catch(error => {
+						this.setState({ error: error, isLoading: false });
+						Liferay.Util.openToast(
+							{
+								message: error,
+								title: Liferay.Language.get('error'),
+								type: 'danger'
+							}
+						);
+					});
+				}
+				else {
+					query = this.REMOVE_ASSET_LIKE + data.id;
+
+					axios.delete(query)
+					.then(
+						response => {
+							const newData = this.state.data.map(card =>
+								card.id === data.id
+								? Object.assign(card, {like: data.like})
+								: card
+							);
+														
+							this.setState({
+								data: newData,
+								isLoading: false
+							});
+						}
+					)
+					.catch(error => {
+						this.setState({ error: error, isLoading: false });
+						Liferay.Util.openToast(
+							{
+								message: error,
+								title: Liferay.Language.get('error'),
+								type: 'danger'
+							}
+						);
+					});
+				}
+		}
+		
+	}
+
     setVisibleSlides(visibleSlides) {
         if (visibleSlides != this.state.visibleSlides) {
             this.setState({
@@ -197,12 +268,12 @@ class App extends React.Component {
 			axios.get(api)
 			.then(response => {
 				this.setState({ 
-					data: response.data,
-					totalSlides: response.data.length
+					data: response.data.items,
+					totalSlides: response.data.items.length
 				})
 
 				let assetEntryIdArr = [];
-				response.data.map(asset => {
+				response.data.items.map(asset => {
 					assetEntryIdArr.push(asset.id);
 				})
 
@@ -220,7 +291,7 @@ class App extends React.Component {
 					})
 
 					let assetEntryIdArr = [];
-					this.sate.data.map(asset => {
+					this.state.data.map(asset => {
 						assetEntryIdArr.push(asset.id);
 					})
 
@@ -321,6 +392,7 @@ class App extends React.Component {
 										portalUrl={this.PORTAL_URL}
 										cardData={cardData}
 										handleStarClick={this.handleStarClick}
+										handleLikeClick={this.handleLikeClick}
 										articleAuthor={cardData.articleAuthor}
 										articleAuthorAvatar={cardData.authorAvatar}
 										articleCreateDate={cardData.createDate}

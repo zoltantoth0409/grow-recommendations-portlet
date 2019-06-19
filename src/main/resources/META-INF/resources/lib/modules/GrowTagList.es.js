@@ -8,7 +8,7 @@ class GrowTagList extends React.Component {
 
 	render() {
 		return (
-			<div className="autofit-section">
+			<div className="autofit-section grow-card-tag">
 				{this.props.articleTags.slice(0, this.props.numOfDisplayed).map((tag, index) => {
 				  return (
 					<span key={index} className="label label-lg text-uppercase">

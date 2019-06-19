@@ -4,11 +4,11 @@
 }
 
 .lexicon-icon-thumbs-up {
-	fill: #8b9dc3;
+	fill: #3b5998;
 }
 
 .thumbs-up-liked {
-	fill: #3b5998;
+	fill: #8b9dc3;
 }
 
 .label-remaining-tags {
@@ -17,9 +17,24 @@
 
 .grow-card {
 	border-bottom: 0.6rem solid #fff;
-
+	.grow-card-title {
+		min-height: 3.5rem;
+	}
+	.grow-card-cont {
+		font-size: 14px;
+		min-height: 5.25rem;
+	}
+	.grow-card-footer {
+		min-height: 6rem;
+	}
+	.grow-card-tag {
+		min-height: 3.5rem;
+	}
 	.btn {
 		padding: 0.4375rem 0.4375rem;
+	}
+	a {
+		color: #09101D;
 	}
 }
 
@@ -89,8 +104,4 @@
 
 .share-footer-inactive {
 	color: #8dd8da;
-}
-
-.article-content {
-	font-size: 14px;
 }
