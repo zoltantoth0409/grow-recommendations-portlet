@@ -168,7 +168,7 @@ class App extends React.Component {
 			if (data.like) {
 				query = this.ADD_ASSET_LIKE + data.id;
 				
-				axios.put(query)
+				axios.post(query)
 					.then(
 						response => {
 							const newData = this.state.data.map(card =>
