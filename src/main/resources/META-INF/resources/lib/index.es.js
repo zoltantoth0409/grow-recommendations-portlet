@@ -23,7 +23,7 @@ class App extends React.Component {
 		this.GET_ISFAVOURITE_ARRAY = this.PORTAL_URL + "/o/favourites/isFavouriteArray?groupId="+ GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
 
 		this.ADD_ASSET_LIKE = this.PORTAL_URL + "/o/grow-likes/addAssetLike?userId=" + USER_ID + "&rank=1&assetEntryId=";
-		this.REMOVE_ASSET_LIKE = this.PORTAL_URL + "/o/grow-likes/deleteAssetLike?userId=" + USER_ID + "&assetEntryId=";
+		this.REMOVE_ASSET_LIKE = this.PORTAL_URL + "/o/grow-likes/deleteAssetLike?&userId=" + USER_ID + "&assetEntryId=";
 		this.GET_ISLIKED_ARRAY = this.PORTAL_URL + "/o/grow-likes/isAssetsLiked?userId=" + USER_ID + "&assetEntryId=";
 		this.GET_ASSETS_LIKED_BY_USER = this.PORTAL_URL + "/o/grow-likes/getAssetsLikedByUserId?userId=" + USER_ID;
 
@@ -81,14 +81,15 @@ class App extends React.Component {
 		Liferay.fire(
 			this.RECOMMENDATION_TOGGLE_STAR_EVENT,
 			{
-				data: data
+				data: data,
+				isLoading: false
 			}
 		);
 	}
 	
-	handleStarClick(data) {
-			
-		if (data) {
+	async handleStarClick(data) {
+
+		if (data && !this.state.isLoading) {
 			this.setState({ isLoading: true });
 				
 			let query = null;
@@ -96,7 +97,7 @@ class App extends React.Component {
 			if (data.star) {
 				query = this.ADD_TO_MYFAVOURITES_QUERY + data.id;
 				
-				axios.put(query)
+				await axios.put(query)
 					.then(
 						response => {
 							const newData = this.state.data.map(card =>
@@ -127,7 +128,7 @@ class App extends React.Component {
 				else {
 					query = this.REMOVE_FROM_MYFAVOURITES_QUERY + data.id;
 
-					axios.delete(query)
+					await axios.delete(query)
 					.then(
 						response => {
 							const newData = this.state.data.map(card =>
@@ -156,11 +157,10 @@ class App extends React.Component {
 					});
 				}
 		}
-		
 	}
 
-	handleLikeClick(data) {
-		if (data) {
+	async handleLikeClick(data) {
+		if (data && !this.state.isLoading) {
 			this.setState({ isLoading: true });
 				
 			let query = null;
@@ -168,7 +168,7 @@ class App extends React.Component {
 			if (data.like) {
 				query = this.ADD_ASSET_LIKE + data.id;
 				
-				axios.post(query)
+				await axios.post(query)
 					.then(
 						response => {
 							const newData = this.state.data.map(card =>
@@ -197,7 +197,7 @@ class App extends React.Component {
 				else {
 					query = this.REMOVE_ASSET_LIKE + data.id;
 
-					axios.delete(query)
+					await axios.post(query)
 					.then(
 						response => {
 							const newData = this.state.data.map(card =>
@@ -248,10 +248,10 @@ class App extends React.Component {
         }
     }
 	
-	componentDidMount() {
+	async componentDidMount() {
 		this.setState({ isLoading: true });
 
-		axios.get(this.GET_ASSETS_LIKED_BY_USER)
+		await axios.get(this.GET_ASSETS_LIKED_BY_USER)
 		.then(response => {
 			let api = this.GET_RECOMMENDATIONS_DEFAULT;
 			if (response.data.data.length > 0) {

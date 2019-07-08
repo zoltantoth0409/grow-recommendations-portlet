@@ -14,15 +14,15 @@ class GrowCard extends React.Component {
 
 	_handleStarClick() {
 
-		this.props.cardData.star = !this.props.cardData.star;
+		let card= Object.assign(this.props.cardData, {star: !this.props.cardData.star});
 			
-		this.props.handleStarClick(this.props.cardData);
+		this.props.handleStarClick(card);
 	}
 
 	_handleLikeClicked() {
-		this.props.cardData.like = !this.props.cardData.like;
+		let card= Object.assign(this.props.cardData, {like: !this.props.cardData.like});
 
-		this.props.handleLikeClick(this.props.cardData);
+		this.props.handleLikeClick(card);
 	}
 
 	render() {
