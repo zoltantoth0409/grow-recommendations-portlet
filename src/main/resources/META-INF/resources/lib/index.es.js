@@ -422,7 +422,12 @@ class App extends React.Component {
 		);
 	}
 }
-
-export default function(elementId) {
-	ReactDOM.render(<App />, document.getElementById(elementId));
+export default function(elementId,likedForRecommendation, instanceNumber, totalNumberOfInstances, random) {
+	ReactDOM.render(
+	<App 
+	likedForRecommendation={likedForRecommendation}
+	instanceNumber={instanceNumber}
+	totalNumberOfInstances={totalNumberOfInstances}
+	random={random}
+	/>, document.getElementById(elementId));
 }

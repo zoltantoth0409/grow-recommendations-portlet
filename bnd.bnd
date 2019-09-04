@@ -1,5 +1,5 @@
 Bundle-Name: GrowRecommendationsPortlet
 Bundle-SymbolicName: growrecommendationsportlet
 Bundle-Version: 1.0.0
-Export-Package: growrecommendationsportlet.constants
 Web-ContextPath: /GrowRecommendationsPortlet
+-metatype: *

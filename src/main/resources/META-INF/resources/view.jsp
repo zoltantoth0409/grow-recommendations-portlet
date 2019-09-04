@@ -3,5 +3,10 @@
 <div id="<portlet:namespace />-root"></div>
 
 <aui:script require="<%= mainRequire %>">
-	main.default('<portlet:namespace />-root');
+	var likedForRecommendation = "<%= likedForRecommendation %>"
+	var instanceNumber = "<%= instanceNumber %>"
+	var totalNumberOfInstances = "<%= totalNumberOfInstances %>"
+	var random = "<%= random %>"
+	
+	main.default('<portlet:namespace />-root', likedForRecommendation, instanceNumber, totalNumberOfInstances, random);
 </aui:script>
