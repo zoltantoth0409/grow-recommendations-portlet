@@ -20,12 +20,11 @@ class App extends React.Component {
 
 		this.ADD_TO_MYFAVOURITES_QUERY = this.PORTAL_URL + "/o/favourites/" + "/addFavourite?groupId=" + GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
 		this.REMOVE_FROM_MYFAVOURITES_QUERY = this.PORTAL_URL + "/o/favourites/" + "/removeFavourite?groupId=" + GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
-		this.GET_ISFAVOURITE_ARRAY = this.PORTAL_URL + "/o/favourites/isFavouriteArray?groupId="+ GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
+		this.GET_ISFAVOURITE_AND_LIKED_ARRAY = this.PORTAL_URL + "/o/favourites/isFavouriteAndLikedArray?groupId="+ GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
 
-		this.ADD_ASSET_LIKE = this.PORTAL_URL + "/o/grow-likes/addAssetLike?userId=" + USER_ID + "&rank=1&assetEntryId=";
-		this.REMOVE_ASSET_LIKE = this.PORTAL_URL + "/o/grow-likes/deleteAssetLike?&userId=" + USER_ID + "&assetEntryId=";
-		this.GET_ISLIKED_ARRAY = this.PORTAL_URL + "/o/grow-likes/isAssetsLiked?userId=" + USER_ID + "&assetEntryId=";
-		this.GET_ASSETS_LIKED_BY_USER = this.PORTAL_URL + "/o/grow-likes/getAssetsLikedByUserId?userId=" + USER_ID;
+		this.ADD_ASSET_LIKE = this.PORTAL_URL + "/o/favourites/addAssetLike?userId=" + USER_ID + "&rank=1&assetEntryId=";
+		this.REMOVE_ASSET_LIKE = this.PORTAL_URL + "/o/favourites/removeAssetLike?&userId=" + USER_ID + "&assetEntryId=";
+		this.GET_ASSETS_LIKED_BY_USER = this.PORTAL_URL + "/o/favourites/getAssetsLikedByUserId?userId=" + USER_ID;
 
 		this.GET_RECOMMENDATIONS_DEFAULT = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US";
 		this.GET_RECOMMENDATIONS_BY_LIKED = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US?count=15&includeAssetTags=true&includeAssetCategories=true&includeUserPortrait=true&assetEntryId=";
@@ -168,7 +167,7 @@ class App extends React.Component {
 			if (data.like) {
 				query = this.ADD_ASSET_LIKE + data.id;
 				
-				await axios.post(query)
+				await axios.put(query)
 					.then(
 						response => {
 							const newData = this.state.data.map(card =>
@@ -197,7 +196,7 @@ class App extends React.Component {
 				else {
 					query = this.REMOVE_ASSET_LIKE + data.id;
 
-					await axios.post(query)
+					await axios.delete(query)
 					.then(
 						response => {
 							const newData = this.state.data.map(card =>
@@ -249,17 +248,47 @@ class App extends React.Component {
     }
 	
 	async componentDidMount() {
-		this.setState({ isLoading: true });
+		this.setState({
+			isLoading: true
+		});
 
-		await axios.get(this.GET_ASSETS_LIKED_BY_USER)
+		let amount = this.props.totalNumberOfInstances * this.props.likedForRecommendation;
+
+		await axios.get(this.GET_ASSETS_LIKED_BY_USER + "&amount=" + amount + "&random=" + this.props.random)
 		.then(response => {
 			let api = this.GET_RECOMMENDATIONS_DEFAULT;
+			let amount = this.props.totalNumberOfInstances * this.props.likedForRecommendation;
 			if (response.data.data.length > 0) {
 				let assetEntryIdArr = [];
+				if (response.data.data.length == amount){
+					let end = amount * this.props.instanceNumber;
+					let start = end - amount;
 
-				response.data.data.map(asset => {
-					assetEntryIdArr.push(asset.id);
-				})
+					for (let i = start; i < end; i++) {
+						assetEntryIdArr.push(response.data.data[i].id);
+					}
+				}
+				else {
+					let ratio = Math.floor(response.data.data.length / this.props.totalNumberOfInstances);
+					if (ratio >= 1) {
+						let end = ratio * this.props.instanceNumber;
+						let start = end - ratio;
+
+						for (let i = start; i < end; i++) {
+							assetEntryIdArr.push(response.data.data[i].id);
+						}
+					}
+					else {
+						for (let i = 0; i < response.data.data.length; i++) {
+							if (i == this.props.instanceNumber) {
+								assetEntryIdArr.push(response.data.data[i].id);
+							}
+							else if (response.data.length < this.props.instanceNumber) {
+								assetEntryIdArr.push(response.data.data[i].id);
+							}
+						}
+					}
+				}
 
 				const assetEntryIdStr = assetEntryIdArr.join('&assetEntryId=');
 
@@ -279,45 +308,20 @@ class App extends React.Component {
 
 				const assetEntryIdStr = assetEntryIdArr.join('&assetEntryId=');
 
-				axios.get(this.GET_ISFAVOURITE_ARRAY + assetEntryIdStr)
+				axios.get(this.GET_ISFAVOURITE_AND_LIKED_ARRAY + assetEntryIdStr)
 				.then(response => {
 					let newData = [];
-					for(var i = 0; i < response.data.length; i++) {
-						newData.push(Object.assign({star: response.data[i]}, this.state.data[i]));
+					let keys = Object.keys(response.data);
+					for(var i = 0; i < keys.length; i++) {
+						newData.push(Object.assign(
+							{
+								star: response.data[this.state.data[i].id][0].favourite,
+								like: response.data[this.state.data[i].id][0].liked
+							}, this.state.data[i]));
 					}
 
 					this.setState({
 						data: newData
-					})
-
-					let assetEntryIdArr = [];
-					this.state.data.map(asset => {
-						assetEntryIdArr.push(asset.id);
-					})
-
-					const assetEntryIdStr = assetEntryIdArr.join('&assetEntryId=');
-
-					axios.get(this.GET_ISLIKED_ARRAY + assetEntryIdStr)
-					.then(response => {
-						let newData = [];
-						for(var i = 0; i < response.data.length; i++) {
-							newData.push(Object.assign({like: response.data[i]}, this.state.data[i]));
-						}
-
-						this.setState({
-							data: newData,
-							isLoading: false
-						})
-					})
-					.catch(error => {
-						this.setState({ error: error, isLoading: false });
-						Liferay.Util.openToast(
-							{
-								message: error,
-								title: Liferay.Language.get('error'),
-								type: 'danger'
-							}
-						);
 					})
 				})
 				.catch(error => {

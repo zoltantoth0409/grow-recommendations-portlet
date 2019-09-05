@@ -86,14 +86,14 @@ class GrowCard extends React.Component {
                   {this.props.like && (
                     <GrowIcon
                       spritemap={this.props.spritemap}
-                      classes="lexicon-icon thumbs-up"
+                      classes="lexicon-icon thumbs-up-liked"
                       iconName="thumbs-up"
                     />
                   )}
                   {this.props.like == false && (
                     <GrowIcon
                       spritemap={this.props.spritemap}
-                      classes="lexicon-icon thumbs-up-liked"
+                      classes="lexicon-icon thumbs-up"
                       iconName="thumbs-up"
                     />
                   )}
