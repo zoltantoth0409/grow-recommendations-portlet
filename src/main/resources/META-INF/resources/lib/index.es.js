@@ -28,7 +28,9 @@ class App extends React.Component {
 
 		this.GET_RECOMMENDATIONS_DEFAULT = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US";
 		this.GET_RECOMMENDATIONS_BY_LIKED = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US?count=15&includeAssetTags=true&includeAssetCategories=true&includeUserPortrait=true&assetEntryId=";
-		this.RECOMMENDATION_TOGGLE_STAR_EVENT = 'recommendationtoggleStarEvent';
+		
+		this.RECOMMENDATION_TOGGLE_LIKE_EVENT = 'revommendationToggleLikeEvent'
+		this.RECOMMENDATION_TOGGLE_STAR_EVENT = 'recommendationToggleStarEvent';
 		this.FAVOURITES_TOGGLE_STAR_EVENT = 'favouritesToggleStarEvent';
 
 		this.state = {
@@ -47,7 +49,15 @@ class App extends React.Component {
 		this.toggleStar = this.toggleStar.bind(this);
 
 		let instance = this; 
-		
+
+		Liferay.on(
+			this.RECOMMENDATION_TOGGLE_LIKE_EVENT,
+			function(event) {
+				if(event && event.data) {
+					instance.toggleLike(event.data);
+				}
+			}
+		);
 		Liferay.on(
 			this.FAVOURITES_TOGGLE_STAR_EVENT,
 			function(event) {
@@ -56,8 +66,33 @@ class App extends React.Component {
 				}
 			}
 		);
-    }
-	
+		Liferay.on(
+			this.RECOMMENDATION_TOGGLE_STAR_EVENT,
+			function(event) {
+				if(event && event.data) {
+					instance.toggleStar(event.data);
+				}
+			}
+		);
+	}
+
+	toggleLike(data) {
+		if (data) {
+			this.setState({ isLoading: true });
+		
+			const newData = this.state.data.map(card =>
+				card.id === data.id
+				? Object.assign(card, {like: data.like})
+				: card
+			);
+			
+			this.setState({
+				data: newData,
+				isLoading: false
+			});
+		}
+	}
+
 	toggleStar(data) {
 		
 		if (data) {
@@ -75,7 +110,17 @@ class App extends React.Component {
 			});
 		}
 	}
-	
+
+	fireToggleLikeEvent(data) {
+		Liferay.fire(
+			this.RECOMMENDATION_TOGGLE_LIKE_EVENT,
+			{
+				data: data,
+				isLoading: false
+			}
+		);
+	}
+
 	fireToggleStarEvent(data) {
 		Liferay.fire(
 			this.RECOMMENDATION_TOGGLE_STAR_EVENT,
@@ -85,7 +130,7 @@ class App extends React.Component {
 			}
 		);
 	}
-	
+
 	async handleStarClick(data) {
 
 		if (data && !this.state.isLoading) {
@@ -180,6 +225,8 @@ class App extends React.Component {
 								data: newData,
 								isLoading: false
 							});
+
+							this.fireToggleLikeEvent(data);
 						}
 					)
 					.catch(error => {
@@ -209,6 +256,8 @@ class App extends React.Component {
 								data: newData,
 								isLoading: false
 							});
+
+							this.fireToggleLikeEvent(data);
 						}
 					)
 					.catch(error => {
