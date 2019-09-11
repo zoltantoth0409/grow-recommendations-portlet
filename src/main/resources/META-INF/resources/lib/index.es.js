@@ -29,16 +29,16 @@ class App extends React.Component {
 		this.GET_RECOMMENDATIONS_DEFAULT = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US";
 		this.GET_RECOMMENDATIONS_BY_LIKED = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US?count=15&includeAssetTags=true&includeAssetCategories=true&includeUserPortrait=true&assetEntryId=";
 		
-		this.RECOMMENDATION_TOGGLE_LIKE_EVENT = 'revommendationToggleLikeEvent'
+		this.RECOMMENDATION_TOGGLE_LIKE_EVENT = 'recommendationToggleLikeEvent'
 		this.RECOMMENDATION_TOGGLE_STAR_EVENT = 'recommendationToggleStarEvent';
 		this.FAVOURITES_TOGGLE_STAR_EVENT = 'favouritesToggleStarEvent';
 
 		this.state = {
 			data: [],
-			totalSlides: 1,
-			visibleSlides: 1,
+			error: null,
 			isLoading: false,
-			error: null
+			totalSlides: 1,
+			visibleSlides: 1
         };
 
 		this.setVisibleSlides = this.setVisibleSlides.bind(this);
@@ -81,7 +81,7 @@ class App extends React.Component {
 			this.setState({ isLoading: true });
 		
 			const newData = this.state.data.map(card =>
-				card.id === data.id
+				card.id.toString() === data.id.toString()
 				? Object.assign(card, {like: data.like})
 				: card
 			);
@@ -99,7 +99,7 @@ class App extends React.Component {
 			this.setState({ isLoading: true });
 		
 			const newData = this.state.data.map(card =>
-				card.id === data.id
+				card.id.toString() === data.id.toString()
 				? Object.assign(card, {star: data.star})
 				: card
 			);
