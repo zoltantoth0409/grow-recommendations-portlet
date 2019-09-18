@@ -4,6 +4,7 @@ import ReactResizeDetector from 'react-resize-detector';
 import axios from 'axios';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 
+import GrowRecommendedByText from "./modules/GrowRecommendedByText.es";
 import GrowCard from './modules/GrowCard.es';
 import GrowIcon from "./modules/GrowIcon.es";
 
@@ -37,6 +38,7 @@ class App extends React.Component {
 			data: [],
 			error: null,
 			isLoading: false,
+			recommendedBy: [],
 			totalSlides: 1,
 			visibleSlides: 1
         };
@@ -309,12 +311,14 @@ class App extends React.Component {
 			let amount = this.props.totalNumberOfInstances * this.props.likedForRecommendation;
 			if (response.data.data.length > 0) {
 				let assetEntryIdArr = [];
+				let recommendedBy = [];
 				if (response.data.data.length == amount){
 					let end = amount * this.props.instanceNumber;
 					let start = end - amount;
 
 					for (let i = start; i < end; i++) {
 						assetEntryIdArr.push(response.data.data[i].id);
+						recommendedBy.push(response.data.data[i]);
 					}
 				}
 				else {
@@ -325,21 +329,28 @@ class App extends React.Component {
 
 						for (let i = start; i < end; i++) {
 							assetEntryIdArr.push(response.data.data[i].id);
+							recommendedBy.push(response.data.data[i]);
 						}
 					}
 					else {
 						for (let i = 0; i < response.data.data.length; i++) {
 							if (i == this.props.instanceNumber) {
 								assetEntryIdArr.push(response.data.data[i].id);
+								recommendedBy.push(response.data.data[i]);
 							}
 							else if (response.data.length < this.props.instanceNumber) {
 								assetEntryIdArr.push(response.data.data[i].id);
+								recommendedBy.push(response.data.data[i]);
 							}
 						}
 					}
 				}
 
 				const assetEntryIdStr = assetEntryIdArr.join('&assetEntryId=');
+
+				this.setState({
+					recommendedBy: recommendedBy
+				});
 
 				api = this.GET_RECOMMENDATIONS_BY_LIKED + assetEntryIdStr;
 			}
@@ -419,9 +430,12 @@ class App extends React.Component {
 							<span aria-hidden="true" className="loading-animation"></span>
 						</div>
 					)}
-				
-					<ReactResizeDetector handleWidth onResize={this.onResize} />
-					
+
+					<GrowRecommendedByText 
+						recommendedBy={this.state.recommendedBy}
+						portalUrl={this.PORTAL_URL}
+					/>
+
 					<CarouselProvider
 						className={"grow-recommendations-carousel"}
 						naturalSlideWidth={350}
@@ -438,6 +452,7 @@ class App extends React.Component {
 							/>
 						</ButtonBack>
 						<Slider className={"grow-carousel-slider"}>
+							<ReactResizeDetector handleWidth onResize={this.onResize} />
 							{this.state.data.map((cardData, key) => 
 								<Slide index={key} key={key}>
 									<GrowCard

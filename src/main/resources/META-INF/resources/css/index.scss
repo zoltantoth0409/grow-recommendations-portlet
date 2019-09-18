@@ -5,5 +5,8 @@
 @import "grow-recommendations-portlet";
 
 .grow-carousel-slider {
-    height: 340px;
+    min-height: 22rem;
+}
+.grow-pdng-right {
+    padding-right: 1rem;
 }

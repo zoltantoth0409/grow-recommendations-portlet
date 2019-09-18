@@ -11,7 +11,7 @@ class GrowCardFooter extends React.Component {
     return (
       <div className="grow-card-footer">
         <div className="autofit-row autofit-padded">
-          <div className="autofit-col autofit-col-expand">
+          <div className="autofit-col autofit-col-expand grow-tag-wrapper">
             <GrowTagList articleTags={this.props.articleTags} />
           </div>
           {this.props.articleReadCount && (
