@@ -424,7 +424,6 @@ class App extends React.Component {
 		return (
 			<div className="grow-recommendations-portlet">
 				<div className="container">
-				
 					{isLoading && (
 						<div className="loading-indicator">
 							<span aria-hidden="true" className="loading-animation"></span>
@@ -435,6 +434,8 @@ class App extends React.Component {
 						recommendedBy={this.state.recommendedBy}
 						portalUrl={this.PORTAL_URL}
 					/>
+
+					<ReactResizeDetector handleWidth onResize={this.onResize} />
 
 					<CarouselProvider
 						className={"grow-recommendations-carousel"}
@@ -452,7 +453,6 @@ class App extends React.Component {
 							/>
 						</ButtonBack>
 						<Slider className={"grow-carousel-slider"}>
-							<ReactResizeDetector handleWidth onResize={this.onResize} />
 							{this.state.data.map((cardData, key) => 
 								<Slide index={key} key={key}>
 									<GrowCard
