@@ -7,7 +7,7 @@ class GrowRecommendedByText extends React.Component {
     render() {
         return (
             <blockquote className="blockquote">
-                <div className="grow-recommendedby-title">{"It's Recommended because you liked"}</div>
+                <div className="grow-recommendedby-title">{this.props.recommendedBy.length > 0 ? ("It's recommended because you liked"):("Recommendations")}</div>
                     <footer className="blockquote-footer text-truncate">
                     {this.props.recommendedBy.map(asset => {
                         return (
