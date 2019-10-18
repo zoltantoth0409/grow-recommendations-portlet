@@ -469,6 +469,7 @@ class App extends React.Component {
 										articleTags={cardData.tags}
 										articleReadCount={cardData.readCount}
 										articleCategory={cardData.articleCategory}
+										userInitials={cardData.userInitials}
 										like={cardData.like ? cardData.like : false}
 										star={cardData.star ? cardData.star : false}
 										id={cardData.id}

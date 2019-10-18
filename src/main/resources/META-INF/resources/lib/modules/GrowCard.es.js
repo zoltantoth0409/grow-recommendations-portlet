@@ -40,11 +40,14 @@ class GrowCard extends React.Component {
           <div className="autofit-row autofit-padded">
             <div className="autofit-col">
               <div className="autofit-section">
-                <img
-                  alt="Author's thumbnail"
-                  className="img-fluid sticker sticker-primary sticker-xl rounded-circle"
-                  src={this.props.articleAuthorAvatar}
-                />
+                {this.props.articleAuthorAvatar ?
+                  (<img
+                    alt="Author's thumbnail"
+                    className="img-fluid sticker sticker-primary sticker-xl rounded-circle"
+                    src={this.props.articleAuthorAvatar}
+                  />) :
+                  <div className="img-fluid sticker sticker-primary sticker-xl rounded-circle">{this.props.userInitials || "Grow"}</div>
+                }
               </div>
             </div>
             <div className="autofit-col autofit-col-expand">
@@ -131,6 +134,7 @@ class GrowCard extends React.Component {
                   <TextTruncate
                     line={3}
                     truncateText="…"
+                    maxCalculateTimes={13}
                     text={this.props.articleContent}
                   />
                 </div>
