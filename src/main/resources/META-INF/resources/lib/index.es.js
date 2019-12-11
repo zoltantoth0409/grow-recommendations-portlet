@@ -15,20 +15,21 @@ class App extends React.Component {
 
 		const GROUP_ID = Liferay.ThemeDisplay.getCompanyGroupId();
 		const USER_ID = Liferay.ThemeDisplay.getUserId();
-		this.PORTAL_URL = Liferay.ThemeDisplay.getPortalURL();
+		const AUTH_TOKEN = Liferay.authToken;
 
+		this.PORTAL_URL = Liferay.ThemeDisplay.getPortalURL();
 		this.SPRITEMAP = Liferay.ThemeDisplay.getPathThemeImages();
 
-		this.ADD_TO_MYFAVOURITES_QUERY = this.PORTAL_URL + "/o/favourites/" + "/addFavourite?groupId=" + GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
-		this.REMOVE_FROM_MYFAVOURITES_QUERY = this.PORTAL_URL + "/o/favourites/" + "/removeFavourite?groupId=" + GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
-		this.GET_ISFAVOURITE_AND_LIKED_ARRAY = this.PORTAL_URL + "/o/favourites/isFavouriteAndLikedArray?groupId="+ GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
+		this.ADD_TO_MYFAVOURITES_QUERY = this.PORTAL_URL + "/o/favourites/" + "/addFavourite?p_auth=" + AUTH_TOKEN + "&groupId=" + GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
+		this.REMOVE_FROM_MYFAVOURITES_QUERY = this.PORTAL_URL + "/o/favourites/" + "/removeFavourite?p_auth=" + AUTH_TOKEN + "&groupId=" + GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
+		this.GET_ISFAVOURITE_AND_LIKED_ARRAY = this.PORTAL_URL + "/o/favourites/isFavouriteAndLikedArray?p_auth=" + AUTH_TOKEN + "&groupId="+ GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
 
-		this.ADD_ASSET_LIKE = this.PORTAL_URL + "/o/favourites/addAssetLike?userId=" + USER_ID + "&rank=1&assetEntryId=";
-		this.REMOVE_ASSET_LIKE = this.PORTAL_URL + "/o/favourites/removeAssetLike?&userId=" + USER_ID + "&assetEntryId=";
-		this.GET_ASSETS_LIKED_BY_USER = this.PORTAL_URL + "/o/favourites/getAssetsLikedByUserId?userId=" + USER_ID;
+		this.ADD_ASSET_LIKE = this.PORTAL_URL + "/o/favourites/addAssetLike?p_auth=" + AUTH_TOKEN + "&userId=" + USER_ID + "&rank=1&assetEntryId=";
+		this.REMOVE_ASSET_LIKE = this.PORTAL_URL + "/o/favourites/removeAssetLike?p_auth=" + AUTH_TOKEN + "&userId=" + USER_ID + "&assetEntryId=";
+		this.GET_ASSETS_LIKED_BY_USER = this.PORTAL_URL + "/o/favourites/getAssetsLikedByUserId?p_auth=" + AUTH_TOKEN + "&userId=" + USER_ID;
 
-		this.GET_RECOMMENDATIONS_DEFAULT = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US";
-		this.GET_RECOMMENDATIONS_BY_LIKED = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US?count=15&includeAssetTags=true&includeAssetCategories=true&includeUserPortrait=true&assetEntryId=";
+		this.GET_RECOMMENDATIONS_DEFAULT = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US?p_auth=" + AUTH_TOKEN;
+		this.GET_RECOMMENDATIONS_BY_LIKED = this.PORTAL_URL + "/o/gsearch-rest/recommendations/en_US?p_auth=" + AUTH_TOKEN + "&count=15&includeAssetTags=true&includeAssetCategories=true&includeUserPortrait=true&assetEntryId=";
 		
 		this.RECOMMENDATION_TOGGLE_LIKE_EVENT = 'recommendationToggleLikeEvent'
 		this.RECOMMENDATION_TOGGLE_STAR_EVENT = 'recommendationToggleStarEvent';
