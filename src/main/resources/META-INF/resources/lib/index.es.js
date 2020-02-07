@@ -3,10 +3,10 @@ import ReactDOM from "react-dom";
 import ReactResizeDetector from 'react-resize-detector';
 import axios from 'axios';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
+import ClayIcon from '@clayui/icon';
 
 import GrowRecommendedByText from "./modules/GrowRecommendedByText.es";
-import GrowCard from './modules/GrowCard.es';
-import GrowIcon from "./modules/GrowIcon.es";
+import { GrowCard } from "grow-clay";
 
 class App extends React.Component {
 	
@@ -18,7 +18,7 @@ class App extends React.Component {
 		const AUTH_TOKEN = Liferay.authToken;
 
 		this.PORTAL_URL = Liferay.ThemeDisplay.getPortalURL();
-		this.SPRITEMAP = Liferay.ThemeDisplay.getPathThemeImages();
+		this.SPRITEMAP = Liferay.ThemeDisplay.getPathThemeImages() + "/icons.svg";
 
 		this.ADD_TO_MYFAVOURITES_QUERY = this.PORTAL_URL + "/o/favourites/" + "/addFavourite?p_auth=" + AUTH_TOKEN + "&groupId=" + GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
 		this.REMOVE_FROM_MYFAVOURITES_QUERY = this.PORTAL_URL + "/o/favourites/" + "/removeFavourite?p_auth=" + AUTH_TOKEN + "&groupId=" + GROUP_ID + "&userId=" + USER_ID + "&assetEntryId=";
@@ -146,15 +146,13 @@ class App extends React.Component {
 				
 				await axios.put(query)
 					.then(
-						response => {
-							const newData = this.state.data.map(card =>
-								card.id === data.id
-								? Object.assign(card, {star: data.star})
-								: card
-							);
-														
+						response => {					
 							this.setState({
-								data: newData,
+								data: this.state.data.map(card =>
+									card.id === data.id
+									? Object.assign(card, {star: data.star})
+									: card
+								),
 								isLoading: false
 							});
 		
@@ -177,15 +175,13 @@ class App extends React.Component {
 
 					await axios.delete(query)
 					.then(
-						response => {
-							const newData = this.state.data.map(card =>
-								card.id === data.id
-								? Object.assign(card, {star: data.star})
-								: card
-							);
-														
+						response => {				
 							this.setState({
-								data: newData,
+								data: this.state.data.map(card =>
+									card.id === data.id
+									? Object.assign(card, {star: data.star})
+									: card
+								),
 								isLoading: false
 							});
 		
@@ -217,15 +213,13 @@ class App extends React.Component {
 				
 				await axios.put(query)
 					.then(
-						response => {
-							const newData = this.state.data.map(card =>
-								card.id === data.id
-								? Object.assign(card, {like: data.like})
-								: card
-							);
-														
+						response => {						
 							this.setState({
-								data: newData,
+								data: this.state.data.map(card =>
+									card.id === data.id
+									? Object.assign(card, {like: data.like})
+									: card
+								),
 								isLoading: false
 							});
 
@@ -248,15 +242,13 @@ class App extends React.Component {
 
 					await axios.delete(query)
 					.then(
-						response => {
-							const newData = this.state.data.map(card =>
-								card.id === data.id
-								? Object.assign(card, {like: data.like})
-								: card
-							);
-														
+						response => {					
 							this.setState({
-								data: newData,
+								data: this.state.data.map(card =>
+									card.id === data.id
+									? Object.assign(card, {like: data.like})
+									: card
+								),
 								isLoading: false
 							});
 
@@ -447,10 +439,9 @@ class App extends React.Component {
 					>
 						<ButtonBack
 							className={"carousel-button-back"}>
-							<GrowIcon
+							<ClayIcon
 								spritemap={this.SPRITEMAP}
-								classes="lexicon-icon inline-item"
-								iconName="angle-left"
+								symbol="angle-left"
 							/>
 						</ButtonBack>
 						<Slider className={"grow-carousel-slider"}>
@@ -462,11 +453,11 @@ class App extends React.Component {
 										cardData={cardData}
 										handleStarClick={this.handleStarClick}
 										handleLikeClick={this.handleLikeClick}
-										articleAuthor={cardData.articleAuthor}
+										articleAuthor={cardData.articleAuthor || cardData.userName}
 										articleAuthorAvatar={cardData.authorAvatar}
-										articleCreateDate={cardData.createDate}
+										articleCreateDate={cardData.createDate || cardData.date}
 										articleTitle={cardData.articleTitle}
-										articleContent={cardData.articleContent}
+										articleContent={cardData.articleContent || cardData.description}
 										articleTags={cardData.tags}
 										articleReadCount={cardData.readCount}
 										articleCategory={cardData.articleCategory}
@@ -474,16 +465,28 @@ class App extends React.Component {
 										like={cardData.like ? cardData.like : false}
 										star={cardData.star ? cardData.star : false}
 										id={cardData.id}
+										interactive={true}
+										href={cardData.articleTitle ?
+											this.PORTAL_URL +
+											"/" +
+											cardData.articleCategory || "Share" +
+											"/" +
+											cardData.articleTitle
+												.split(" ")
+												.join("+")
+												.replace(/'/g, '_APOSTROPHE_')
+												.toLowerCase()
+											: undefined
+										}
 									/>
 								</Slide>
 							)}
 						</Slider>		
 						<ButtonNext
 							className={"carousel-button-next"}>
-							<GrowIcon
+							<ClayIcon
 								spritemap={this.SPRITEMAP}
-								classes="lexicon-icon inline-item"
-								iconName="angle-right"
+								symbol="angle-right"
 							/>
 						</ButtonNext>
 					</CarouselProvider>
