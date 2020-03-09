@@ -469,7 +469,7 @@ class App extends React.Component {
 										href={cardData.articleTitle ?
 											this.PORTAL_URL +
 											"/" +
-											cardData.articleCategory || "Share" +
+											(cardData.articleCategory || "Share") +
 											"/" +
 											cardData.articleTitle
 												.split(" ")
